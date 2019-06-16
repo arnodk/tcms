@@ -1,0 +1,12 @@
+<html>
+<head>
+</head>
+<body>
+mijn template:
+[render-section:menu]
+
+[render-section:main]
+
+[render-section:footer]
+</body>
+</html>

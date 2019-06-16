@@ -1,0 +1,7 @@
+[list]
+[item]
+	[link:internal-page:start:Homepage]
+[item]
+	[link:internal-page:portfolio:Portfolio]
+[item]
+	[link:internal-page:about:About]	
