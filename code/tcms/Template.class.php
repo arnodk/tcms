@@ -21,10 +21,12 @@ class Template
     private $sContent = "";
     private $aLabels = NULL;
     private $aSections = array();
+    private $context = NULL;
 
-    public function __construct($fs)
+    public function __construct($context)
     {
-        $this->fs = $fs;
+        $this->context = $context;
+        $this->fs = new FileSystem($context);
     }
 
     public function setName($s)

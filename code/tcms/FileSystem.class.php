@@ -12,9 +12,9 @@ use tcms\tools\Tools;
 
 class FileSystem
 {
-    public function __construct(Config $config)
+    public function __construct(Context $context)
     {
-        $this->config = $config;
+        $this->context = $context;
     }
 
     public function sanitize($s) {
@@ -44,7 +44,7 @@ class FileSystem
                 break;
         }
 
-        $sFullPath = $this->config->getBaseFileSystemPath()."/".$sContentDir."/".$sFileName;
+        $sFullPath = $this->context->config->getBaseFileSystemPath()."/".$sContentDir."/".$sFileName;
 
         return file_get_contents($sFullPath);
     }

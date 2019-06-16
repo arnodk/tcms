@@ -9,6 +9,7 @@
 namespace tcms;
 
 
+use tcms\commands\Command;
 use tcms\tools\Tools;
 
 class Page
@@ -20,6 +21,8 @@ class Page
     private $aSections = array("default"=>"");
     private $sCurrentSection = "default";
 
+    private $context = false;
+
     /**
      * @var Config
      */
@@ -29,11 +32,12 @@ class Page
      */
     private $fs = NULL;
 
-    public function __construct(Config $config, FileSystem $fs)
+    public function __construct(Context $context)
     {
-        $this->config = $config;
-        $this->fs = $fs;
-        $this->template = new Template($this->fs);
+        $this->context = $context;
+
+        $this->fs = new FileSystem($this->context);
+        $this->template = new Template($this->context);
     }
 
     public function setInput($aLabels) {
@@ -59,9 +63,17 @@ class Page
         return $this->getHtml();
     }
 
+    private function getCommand(Label $lbl) {
+        $sName = '\tcms\commands\Command'.$lbl->getName();
+        if (class_exists($sName)) {
+            return new $sName($lbl,$this->context);
+        }
+        return false;
+    }
 
     private function renderLabel(Label $lbl) {
         switch ($lbl->getName()) {
+            // deal with commands used for internal page operations:
             case "template":
                 $this->template->setName($lbl->getArg(0,""));
                 $this->template->load();
@@ -73,15 +85,16 @@ class Page
                 $this->sCurrentSection = $lbl->getArg(0,"");
                 $this->addToSection($lbl->getContent());
                 break;
-            case "header":
-                $this->addToSection("<h1>".htmlspecialchars($lbl->getContent())."</h1>");
-                break;
             case "text":
                 $this->addToSection("<p>".htmlspecialchars($lbl->getContent())."</p>");
                 break;
             case "html":
                 $this->addToSection($lbl->getContent());
                 break;
+            // and deal with other commands in a plug-in like nature:
+            default:
+                $command = $this->getCommand($lbl);
+                if ($command instanceof Command) $this->addToSection($command->render());
         }
     }
 

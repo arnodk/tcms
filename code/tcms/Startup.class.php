@@ -4,6 +4,7 @@ namespace tcms;
 // load up necessities:
 require_once("Config.class.php");
 require_once("tools\Tools.class.php");
+require_once("Context.class.php");
 require_once("FileSystem.class.php");
 require_once("Router.class.php");
 require_once("Label.class.php");
@@ -13,6 +14,9 @@ require_once("Page.class.php");
 require_once("Render.class.php");
 require_once("Output.class.php");
 require_once("Controller.class.php");
+
+require_once("commands\Command.class.php");
+require_once("commands\CommandHeader.class.php");
 
 class Startup {
     public static function boot() {

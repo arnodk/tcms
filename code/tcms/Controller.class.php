@@ -17,18 +17,20 @@ class Controller
     private $parser = false;
     private $page = false;
     private $output = false;
+    private $context = false;
 
     public function __construct()
     {
-        $this->config = new Config();
+        $this->context = new Context();
+        $this->context->config = new Config();
+
         $this->router = new Router();
-        $this->fs = new FileSystem($this->config);
         $this->parser = new Parser();
         $this->output = new Output();
-        $this->page = new Page(
-            $this->config,
-            $this->fs
-        );
+
+        $this->fs = new FileSystem($this->context);
+        $this->page = new Page($this->context);
+
     }
 
     public function run($sAction="view") {
