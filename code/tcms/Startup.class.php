@@ -15,11 +15,15 @@ require_once("Render.class.php");
 require_once("Output.class.php");
 require_once("Controller.class.php");
 
-require_once("commands\Command.class.php");
-require_once("commands\CommandHeader.class.php");
 
 class Startup {
     public static function boot() {
+
+        // include all command classes in command dir:
+        foreach (glob(__DIR__."/commands/Command*.class.php") as $sFileName)
+        {
+            include_once $sFileName;
+        }
 
         // basically initiate a controller, and let it go at it:
         $controller = new Controller();

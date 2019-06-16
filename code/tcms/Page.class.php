@@ -85,12 +85,6 @@ class Page
                 $this->sCurrentSection = $lbl->getArg(0,"");
                 $this->addToSection($lbl->getContent());
                 break;
-            case "text":
-                $this->addToSection("<p>".htmlspecialchars($lbl->getContent())."</p>");
-                break;
-            case "html":
-                $this->addToSection($lbl->getContent());
-                break;
             // and deal with other commands in a plug-in like nature:
             default:
                 $command = $this->getCommand($lbl);
