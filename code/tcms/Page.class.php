@@ -48,6 +48,11 @@ class Page
 
     }
 
+    public function setTemplateName($s) {
+        $this->template->setName($s);
+        $this->template->load();
+    }
+
     public function run() {
         // go through all the labels,
         // to set sections and get the html for each section:
@@ -75,8 +80,7 @@ class Page
         switch ($lbl->getName()) {
             // deal with commands used for internal page operations:
             case "template":
-                $this->template->setName($lbl->getArg(0,""));
-                $this->template->load();
+                $this->setTemplateName($lbl->getArg(0,""));
                 break;
             case "title":
                 $this->sTitle = $lbl->getArg(0,"");
@@ -96,6 +100,10 @@ class Page
         if (!isset($this->aSections[$this->sCurrentSection])) $this->aSections[$this->sCurrentSection]="";
 
         $this->aSections[$this->sCurrentSection].=$s;
+    }
+
+    public function getSections() {
+        return $this->aSections;
     }
 
     public function getHtml() {

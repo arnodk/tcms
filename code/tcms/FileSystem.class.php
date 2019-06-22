@@ -38,6 +38,10 @@ class FileSystem
                     $sContentDir = "pages";
                     $sFileName.=".txt";
                     break;
+            case "block":
+                $sContentDir = "blocks";
+                $sFileName.=".txt";
+                break;
             case "template":
                 $sContentDir = "templates";
                 $sFileName.=".txt";

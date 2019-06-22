@@ -25,6 +25,7 @@ class Template
 
     public function __construct($context)
     {
+        $this->aLabels = array();
         $this->context = $context;
         $this->fs = new FileSystem($context);
     }
@@ -51,6 +52,7 @@ class Template
     public function getHtml()
     {
         $sHtml = "";
+
         foreach($this->aLabels as $label) {
             if ($label->getName()==="render-section") {
                 // if this is a section, fill it up with the content supplied in the aSections array:
