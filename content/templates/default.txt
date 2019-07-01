@@ -1,18 +1,23 @@
 <html>
 <head>
+<link rel="stylesheet" type="text/css" href="[baseurl]/thirdparty/bootstrap/css/bootstrap.css">
 <link rel="stylesheet" type="text/css" href="[baseurl]/css/default.css">
 </head>
 <body>
+    <header>
+        [block:header]
+        <nav class="navbar navbar-expand-md navbar-dark fixed-top bg-dark">
+            [block:menu]
+        </nav>
+    </header>
 
-mijn template:
+    <main>
+        [rendersection:main]
+    </main>
 
-sectie menu:
-[rendersection:menu]
+    <footer>
+        [block:footer]
+    </footer>
 
-sectie main:
-[rendersection:main]
-
-sectie footer:
-[rendersection:footer]
 </body>
 </html>

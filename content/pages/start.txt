@@ -19,9 +19,3 @@ Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod 
 
 [/section]
 
-[section:footer]
-
-mijn footer
-[block:default-footer]
-
-[/section]

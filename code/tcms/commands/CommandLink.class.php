@@ -35,7 +35,6 @@ class CommandLink extends Command
         if (empty($sLinkProtocol)) {
             // check if this page exists:
             $fs = new FileSystem($this->context);
-            echo $this->sEndPoint;
             if ($fs->bExists('page',$this->sEndPoint)) {
                 $router = new Router($this->context);
                 $sUrl = $router->sConstructlinkForPage($this->sEndPoint);
