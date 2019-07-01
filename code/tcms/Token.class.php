@@ -164,7 +164,7 @@ class Token {
                 $this->addToken($token);
 
                 // replace match with a placeholder referring to the newly created token:
-                $this->sContent = substr($this->sContent, 0, $aMatch[1] ) . "{{" . $token->getId() . "}}" . substr($this->sContent, $iClosingPos + 1);
+                $this->sContent = substr($this->sContent, 0, $aMatch[1] ) . "{{" . $token->getId() . "}}" . substr($this->sContent, $iClosingPos );
 
                 // recursively parse the content of the label:
                $token->parse();

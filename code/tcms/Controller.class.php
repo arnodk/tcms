@@ -8,7 +8,6 @@
 namespace tcms;
 
 use tcms\tools\Tools;
-use tcms\tools\Variables;
 
 class Controller
 {
@@ -25,14 +24,14 @@ class Controller
         $this->context = new Context();
         $this->context->config = new Config();
         $this->context->vars = new Variables();
+        $this->context->log = new Log($this->context);
 
-        $this->router = new Router();
+        $this->router = new Router($this->context);
         $this->parser = new Parser();
         $this->output = new Output();
 
         $this->fs = new FileSystem($this->context);
         $this->page = new Page($this->context);
-
     }
 
     public function run($sAction="view") {

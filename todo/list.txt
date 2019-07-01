@@ -1,2 +1,6 @@
+- log bestand wordt nog niet aangemaakt.
+- in link command lijkt het erop dat de recursie weggevallen is?
 - block command implementeren
 - spider bouwen die alle pagina's doorloopt en een deploybare website in een html structuur dumpt.
+- neem docker docu's of mozilla docu's als een voorbeeld van default site opbouw.
+- simpele editor, met mogelijkheid statische html deployable zips te genereren.

@@ -6,13 +6,13 @@
  * Time: 19:24
  */
 
-namespace tcms\tools;
+namespace tcms;
 
 
 class Variables
 {
-    const TYPE_STRING = 0;
-    const TYPE_NUM = 1;
+    public const TYPE_STRING = 0;
+    public const TYPE_NUM = 1;
 
     private $aVars = array();
 

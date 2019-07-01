@@ -1,7 +1,9 @@
 <html>
 <head>
+<link rel="stylesheet" type="text/css" href="[baseurl]/css/default.css">
 </head>
 <body>
+
 mijn template:
 
 sectie menu:

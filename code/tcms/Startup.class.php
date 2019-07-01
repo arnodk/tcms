@@ -5,6 +5,7 @@ namespace tcms;
 require_once("Config.class.php");
 require_once("tools\Tools.class.php");
 require_once("Context.class.php");
+require_once("Log.class.php");
 require_once("FileSystem.class.php");
 require_once("Router.class.php");
 require_once("Token.class.php");

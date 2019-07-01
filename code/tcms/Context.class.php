@@ -8,9 +8,6 @@
 
 namespace tcms;
 
-
-use tcms\tools\Variables;
-
 class Context
 {
     /**
@@ -23,4 +20,9 @@ class Context
      * @var Variables
      */
     public $vars = NULL;
+
+    /**
+     * @var Log
+     */
+    public $log = NULL;
 }

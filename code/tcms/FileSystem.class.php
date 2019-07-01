@@ -12,6 +12,8 @@ use tcms\tools\Tools;
 
 class FileSystem
 {
+    private $context = NULL;
+
     public function __construct(Context $context)
     {
         $this->context = $context;
@@ -23,33 +25,92 @@ class FileSystem
         return $s;
     }
 
+    private function getCategoryDir($sCategory) {
+        $sContentDir="";
+
+        switch($sCategory) {
+            case "page":
+                $sContentDir = "/content/pages";
+                break;
+            case "block":
+                $sContentDir = "/content/blocks";
+                break;
+            case "template":
+                $sContentDir = "/content/templates";
+                break;
+            case "log":
+                // logs is one dir up from content's perspective:
+                $sContentDir = "/logs";
+                break;
+        }
+
+        if (!empty($sContentDir)) $sContentDir = $this->context->config->getBaseFileSystemPath() . $sContentDir;
+
+        return $sContentDir;
+    }
+
+    private function addFileNameExtension($sFileName, $sCategory) {
+        $sExtension="";
+
+        switch($sCategory) {
+            case "page":
+                $sExtension="txt";
+                break;
+            case "block":
+                $sExtension="txt";
+                break;
+            case "template":
+                $sExtension="txt";
+                break;
+            case "log":
+                $sExtension="txt";
+                break;
+        }
+
+        // only return filenames for known extensions:
+        if (empty($sExtension)) return "";
+
+        return $sFileName.".".$sExtension;
+    }
+
+    private function getFullPath($sCategory,$sFileName) {
+        // sanity check:
+        if (empty($sCategory) || empty($sFileName)) return "";
+
+        $sFileName = $this->sanitize($sFileName);
+        $sCategory = strtolower($sCategory);
+
+        $sContentDir = $this->getCategoryDir($sCategory);
+        $sFileName = $this->addFileNameExtension($sFileName,$sCategory);
+
+        // recheck, if an error occured, these might be set to an empty string
+        if (empty($sContentDir) || empty($sFileName)) return "";
+
+        return $sContentDir . "/" . $sFileName;
+    }
+
     /**
      * @param $sCategory
      * @param $sFileName
      * @return bool|string
      */
     public function load($sCategory, $sFileName) {
-        $sFileName = $this->sanitize($sFileName);
-        $sCategory = strtolower($sCategory);
-        $sContentDir = "";
 
-        switch($sCategory) {
-            case "page":
-                    $sContentDir = "pages";
-                    $sFileName.=".txt";
-                    break;
-            case "block":
-                $sContentDir = "blocks";
-                $sFileName.=".txt";
-                break;
-            case "template":
-                $sContentDir = "templates";
-                $sFileName.=".txt";
-                break;
-        }
-
-        $sFullPath = $this->context->config->getBaseFileSystemPath()."/".$sContentDir."/".$sFileName;
+        $sFullPath = $this->getFullPath($sCategory,$sFileName);
+        if (!file_exists($sFullPath)) return "";
 
         return file_get_contents($sFullPath);
+    }
+
+    public function append($sCategory,$sFileName,$sData) {
+        $sFullPath = $this->getFullPath($sCategory,$sFileName);
+
+        return file_put_contents($sFullPath,$sData,FILE_APPEND);
+    }
+
+    public function bExists($sCategory,$sFileName) {
+        $sFullPath = $this->getFullPath($sCategory,$sFileName);
+
+        return file_exists($sFullPath);
     }
 }
