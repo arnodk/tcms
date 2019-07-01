@@ -7,9 +7,9 @@
  */
 namespace tcms\commands;
 
-class CommandText extends Command
+class CommandOut extends Command
 {
     public function render() {
-        return "<p>".htmlspecialchars($this->token->getContent())."</p>";
+        return $this->token->getContent();
     }
 }

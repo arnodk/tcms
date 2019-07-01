@@ -8,15 +8,16 @@
 namespace tcms\commands;
 use tcms\Context;
 use tcms\Label;
+use tcms\Token;
 
 class Command
 {
-    protected $lbl = false;
+    protected $token = false;
     protected $context = false;
 
-    public function __construct(Label $lbl, Context $context)
+    public function __construct(Token $token, Context $context)
     {
-        $this->lbl = $lbl;
+        $this->token = $token;
         $this->context = $context;
     }
 }

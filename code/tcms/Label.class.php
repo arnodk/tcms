@@ -39,4 +39,5 @@ class Label {
     public function getContent() {
         return $this->sContent;
     }
+    
 }

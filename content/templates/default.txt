@@ -3,10 +3,14 @@
 </head>
 <body>
 mijn template:
-[render-section:menu]
 
-[render-section:main]
+sectie menu:
+[rendersection:menu]
 
-[render-section:footer]
+sectie main:
+[rendersection:main]
+
+sectie footer:
+[rendersection:footer]
 </body>
 </html>

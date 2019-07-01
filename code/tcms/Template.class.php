@@ -19,9 +19,11 @@ class Template
     */
     private $fs = NULL;
     private $sContent = "";
-    private $aLabels = NULL;
+    private $token = NULL;
     private $aSections = array();
     private $context = NULL;
+    private $sHtml = '';
+
 
     public function __construct($context)
     {
@@ -30,38 +32,44 @@ class Template
         $this->fs = new FileSystem($context);
     }
 
+    public function setToken($token) {
+        $this->token = $token;
+    }
+
     public function setName($s)
     {
         $this->sName = $s;
     }
 
-    public function load()
-    {
-        $this->sContent = $this->fs->load("template",$this->sName);
-
-        // fill up available sections, by re-using the parser:
-        $parser = new Parser();
-        $this->aLabels = $parser->parse($this->sContent);
-
+    public function getName() {
+        return $this->sName;
     }
 
-    public function setSections($aPageSections) {
-        $this->aSections = $aPageSections;
+    public function load() {
+        // load and parse the page:
+        $token = Parser::parse($this->fs->load("template",$this->sName));
+        if (!empty($token)) {
+            // render the parsed content:
+            $this->setToken($token);
+        }
+    }
+
+    public function render() {
+        $this->renderToken();
+        return $this->sHtml;
     }
 
     public function getHtml()
     {
-        $sHtml = "";
-
-        foreach($this->aLabels as $label) {
-            if ($label->getName()==="render-section") {
-                // if this is a section, fill it up with the content supplied in the aSections array:
-                if (isset($this->aSections[$label->getArg(0,'')])) $sHtml.= $this->aSections[$label->getArg(0,'')];
-            } else {
-                $sHtml.= $label->getContent();
-            }
-        }
-
-        return $sHtml;
+        return $this->sHtml;
     }
+
+    private function renderToken() {
+        if (empty($this->token)) {
+            $this->sHtml = "";
+        } else {
+            $this->sHtml=Render::render($this->token,$this->context);
+        }
+    }
+
 }

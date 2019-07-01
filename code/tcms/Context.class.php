@@ -9,10 +9,18 @@
 namespace tcms;
 
 
+use tcms\tools\Variables;
+
 class Context
 {
     /**
      * @var Config
      */
     public $config = NULL;
+
+    // variables for renderer:
+    /**
+     * @var Variables
+     */
+    public $vars = NULL;
 }

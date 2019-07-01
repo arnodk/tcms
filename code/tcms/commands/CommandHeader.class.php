@@ -10,6 +10,6 @@ namespace tcms\commands;
 class CommandHeader extends Command
 {
     public function render() {
-        return "<h1>".htmlspecialchars($this->lbl->getContent())."</h1>";
+        return "<h1>".htmlspecialchars($this->token->getContent())."</h1>";
     }
 }

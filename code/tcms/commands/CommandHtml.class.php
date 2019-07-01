@@ -10,6 +10,6 @@ namespace tcms\commands;
 class CommandHtml extends Command
 {
     public function render() {
-        return $this->lbl->getContent();
+        return $this->token->getContent();
     }
 }

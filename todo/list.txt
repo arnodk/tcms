@@ -1,0 +1,2 @@
+- block command implementeren
+- spider bouwen die alle pagina's doorloopt en een deploybare website in een html structuur dumpt.

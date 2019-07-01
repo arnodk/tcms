@@ -8,35 +8,36 @@
 
 namespace tcms;
 
+use tcms\commands\Command;
 
 class Render
 {
-    private $aLabels = array();
-    private $aSections = array();
-
-    private $sResult = "";
-    /**
-     * @var Page
-     */
-    private $page = NULL;
-
-    public function setInput($aLabels) {
-        $this->aLabels = $aLabels;
-    }
-
-    public function run() {
-        foreach($this->aLabels as $lbl) {
-            if ($lbl instanceof Label) {
-
-            }
+    public static function getCommand(Token $token, $context) {
+        $sName = '\tcms\commands\Command'.$token->getName();
+        if (class_exists($sName)) {
+            return new $sName($token,$context);
         }
+        return false;
     }
 
-    public function getErrors() {
+    public static function render(Token $token, $context, $bRenderSelf=true) {
+        $sContent = "";
 
-    }
+        if ($bRenderSelf) {
+            $command = self::getCommand($token, $context);
+            if ($command instanceof Command) $sContent .= $command->render();
+        } else {
+            // do not render self, but do use its content to fill up the placeholders:
+            $sContent .= $token->getContent();
+        }
 
-    public function getResult() {
-        return $this->sResult;
+        while($token->hasNextToken()) {
+            $tokenNext = $token->getNextToken();
+            $sSubContent=self::render($tokenNext,$context);
+            // replace placeholder with rendered subtoken:
+            $sContent = str_replace("{{".$tokenNext->getId()."}}",$sSubContent,$sContent);
+        }
+
+        return $sContent;
     }
 }

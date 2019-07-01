@@ -7,9 +7,10 @@
  */
 namespace tcms\commands;
 
-class CommandText extends Command
+class CommandTemplate extends Command
 {
     public function render() {
-        return "<p>".htmlspecialchars($this->token->getContent())."</p>";
+        $this->context->vars->set("page:template",$this->token->getArg(0));
+        return "";
     }
 }

@@ -16,7 +16,7 @@ class Page
 {
     private $template = NULL;
     private $sTitle = "";
-    private $aLabels = array();
+    private $token = NULL;
     private $sHtml = "";
     private $aSections = array("default"=>"");
     private $sCurrentSection = "default";
@@ -40,8 +40,8 @@ class Page
         $this->template = new Template($this->context);
     }
 
-    public function setInput($aLabels) {
-        $this->aLabels = $aLabels;
+    public function setToken($token) {
+        $this->token = $token;
     }
 
     public function getErrors() {
@@ -54,46 +54,26 @@ class Page
     }
 
     public function run() {
-        // go through all the labels,
-        // to set sections and get the html for each section:
-        foreach($this->aLabels as $lbl) {
-            if ($lbl instanceof Label) {
-                $this->renderLabel($lbl);
-            }
+        // render page content:
+        // this should fill up all sections with the relevant content
+        $this->renderToken();
+
+        // retrieve global template name, if none was previously set:
+        if (empty($this->template->getName())) $this->setTemplateName($this->context->vars->getValue('page:template',''));
+
+        if (!empty($this->template->getName())) {
+            $this->setTemplateName($this->template->getName());
         }
 
-        // done taking care of the labels, fill up the template with the found sections:
-        $this->template->setSections($this->aSections);
+        // render template, this will insert the content of the sections at the appropriate place in the template:
+        $this->sHtml = $this->template->render();
 
         return $this->getHtml();
     }
 
-    private function getCommand(Label $lbl) {
-        $sName = '\tcms\commands\Command'.$lbl->getName();
-        if (class_exists($sName)) {
-            return new $sName($lbl,$this->context);
-        }
-        return false;
-    }
 
-    private function renderLabel(Label $lbl) {
-        switch ($lbl->getName()) {
-            // deal with commands used for internal page operations:
-            case "template":
-                $this->setTemplateName($lbl->getArg(0,""));
-                break;
-            case "title":
-                $this->sTitle = $lbl->getArg(0,"");
-                break;
-            case "section":
-                $this->sCurrentSection = $lbl->getArg(0,"");
-                $this->addToSection($lbl->getContent());
-                break;
-            // and deal with other commands in a plug-in like nature:
-            default:
-                $command = $this->getCommand($lbl);
-                if ($command instanceof Command) $this->addToSection($command->render());
-        }
+    private function renderToken() {
+        $this->sHtml=Render::render($this->token,$this->context);
     }
 
     public function addToSection($s) {
@@ -109,5 +89,14 @@ class Page
     public function getHtml() {
         $this->sHtml = $this->template->getHtml();
         return $this->sHtml;
+    }
+
+    public function load($sPage) {
+        // load and parse the page:
+        $token = Parser::parse($this->fs->load("page",$sPage));
+        if (!empty($token)) {
+            // render the parsed content:
+            $this->setToken($token);
+        }
     }
 }

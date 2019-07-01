@@ -18,7 +18,7 @@ class CommandBlock extends Command
 
     private function loadData() {
         $fs = new FileSystem($this->context);
-        $sFileName = $this->lbl->getArg(0);
+        $sFileName = $this->token->getArg(0);
         $this->sContent = $fs->load('block',$sFileName);
     }
 
@@ -27,12 +27,11 @@ class CommandBlock extends Command
         // render these:
         $this->loadData();
 
-        $parser = new Parser();
-        $aLabels = $parser->parse($this->sContent);
+        // wrap the content in a section, so that we can parse it:
+        $token = Parser::parse('[section:block]'.$this->sContent.'[/section]');
         $page = new Page($this->context);
-        $page->setInput($aLabels);
+        $page->setToken($token);
         $page->setTemplateName('block');
-
         return $page->run();
     }
 }

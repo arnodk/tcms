@@ -8,6 +8,7 @@
 namespace tcms;
 
 use tcms\tools\Tools;
+use tcms\tools\Variables;
 
 class Controller
 {
@@ -23,6 +24,7 @@ class Controller
     {
         $this->context = new Context();
         $this->context->config = new Config();
+        $this->context->vars = new Variables();
 
         $this->router = new Router();
         $this->parser = new Parser();
@@ -51,11 +53,7 @@ class Controller
         // which page are we on?
         $sPage = $this->router->determinePage();
 
-        // load and parse the page:
-        $aParsed = $this->parser->parse($this->fs->load("page",$sPage));
-
-        // render the parsed content:
-        $this->page->setInput($aParsed);
+        $this->page->load($sPage);
 
         return $this->page->run();
     }

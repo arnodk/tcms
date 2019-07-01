@@ -1,1 +1,1 @@
-[render-section:default]
+[rendersection:block]
