@@ -2,3 +2,56 @@ body {
     background-color:#222;
     color:#e2e6ea;
 }
+
+.grid-default {
+    display:grid;
+    grid-template-columns: 20% 35% 35% 10%;
+    grid-template-rows: 10% 80% 10%;
+    height:calc(100% - 20px);
+    width:calc(100% - 30px);
+    grid-gap:10px;
+}
+
+.grid-top {
+    grid-column-start: 1;
+    grid-column-end: 5;
+    grid-row-start: 1;
+    grid-row-end: 2;
+}
+.grid-left-content {
+    grid-column-start: 1;
+    grid-column-end: 2;
+    grid-row-start: 2;
+    grid-row-end: 3;
+}
+.grid-middle-content {
+    grid-column-start: 2;
+    grid-column-end: 4;
+    grid-row-start: 2;
+    grid-row-end: 3;
+    background-color:blue;
+    overflow-y:auto;
+}
+.grid-right-content {
+    grid-column-start: 4;
+    grid-column-end: 5;
+    grid-row-start: 2;
+    grid-row-end: 3;
+}
+.grid-bottom {
+    grid-column-start: 1;
+    grid-column-end: 5;
+    grid-row-start: 3;
+    grid-row-end: 4;
+}
+.outline {
+    border-style:solid;
+    border-color:#0c5460;
+    border-width:1px;
+}
+img.w50 {
+    width:50%;
+}
+img.w100 {
+    width:100%;
+}

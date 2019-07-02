@@ -14,7 +14,7 @@ class Router {
         $this->context = $c;
     }
 
-    public function sConstructlinkForPage($sPage)
+    public function sConstructLinkForPage($sPage)
     {
         // pages do not include "." symbols
         $sPage = str_replace(".","",$sPage);
@@ -44,6 +44,13 @@ class Router {
         }
 
         return $sPage;
+    }
+
+    public function sConstructLinkForAsset($sEndPoint)
+    {
+        $sEndPoint = urlencode($sEndPoint);
+        $sUrl=$this->context->config->getBaseURL()."/assets/".$sEndPoint;
+        return $sUrl;
     }
 
 }

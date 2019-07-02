@@ -20,7 +20,7 @@ class FileSystem
     }
 
     public function sanitize($s) {
-        $s = preg_replace("([^\w\d\-_])", '', $s);
+        $s = preg_replace("([^\w\d\-_\.])", '', $s);
         $s = str_replace("..","",$s);
         return $s;
     }
@@ -38,6 +38,9 @@ class FileSystem
             case "template":
                 $sContentDir = "/content/templates";
                 break;
+            case "asset":
+                $sContentDir = "/public/assets";
+                break;
             case "log":
                 // logs is one dir up from content's perspective:
                 $sContentDir = "/logs";
@@ -47,6 +50,12 @@ class FileSystem
         if (!empty($sContentDir)) $sContentDir = $this->context->config->getBaseFileSystemPath() . $sContentDir;
 
         return $sContentDir;
+    }
+
+    public function isExtensionAllowed($sExtension) {
+        $sExtension = strtolower($sExtension);
+        // filter out executables:
+        return (!in_array($sExtension ,array("com","exe","sh","php","py","bat"))); // TODO: extend this list.
     }
 
     private function addFileNameExtension($sFileName, $sCategory) {
@@ -64,6 +73,12 @@ class FileSystem
                 break;
             case "log":
                 $sExtension="txt";
+                break;
+            case "asset":
+                // check for allowed extension on the filename itself:
+                $sExtension = Tools::getExtensionFromFileName($sFileName);
+                if (!empty($sExtension)) $sFileName=substr($sFileName,0,strlen($sFileName) - strlen($sExtension) - 1);
+                if (!$this->isExtensionAllowed($sExtension)) $sExtension = "";
                 break;
         }
 
@@ -109,6 +124,7 @@ class FileSystem
     }
 
     public function bExists($sCategory,$sFileName) {
+
         $sFullPath = $this->getFullPath($sCategory,$sFileName);
 
         return file_exists($sFullPath);

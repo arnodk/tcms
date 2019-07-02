@@ -37,7 +37,9 @@ class CommandLink extends Command
             $fs = new FileSystem($this->context);
             if ($fs->bExists('page',$this->sEndPoint)) {
                 $router = new Router($this->context);
-                $sUrl = $router->sConstructlinkForPage($this->sEndPoint);
+                $sUrl = $router->sConstructLinkForPage($this->sEndPoint);
+            } else {
+                $this->context->log->add("Unknown link requested: [".$this->sEndPoint."]");
             }
         }
         return htmlspecialchars($sUrl);

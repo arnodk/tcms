@@ -85,4 +85,10 @@ class Tools
     {
         return ((strpos($sUrl,"?")===false)?"?":"&");
     }
+
+    public static function getExtensionFromFileName($sFileName)
+    {
+        if (strpos($sFileName,".")===false) return "";
+        return substr($sFileName,strrpos($sFileName,".")+1);
+    }
 }

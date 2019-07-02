@@ -4,20 +4,34 @@
 <link rel="stylesheet" type="text/css" href="[baseurl]/css/default.css">
 </head>
 <body>
-    <header>
-        [block:header]
-        <nav class="navbar navbar-expand-md navbar-dark fixed-top bg-dark">
-            [block:menu]
+<!--
+    <nav class="navbar navbar-expand-md navbar-dark fixed-top bg-dark">
+        [block:menu-top]
+    </nav>
+-->
+    <div class="grid-default">
+
+        <header class="grid-top outline">
+            [block:header]
+        </header>
+
+        <nav class="grid-left-content outline">
+            left-menu
         </nav>
-    </header>
 
-    <main>
-        [rendersection:main]
-    </main>
+        <main class="grid-middle-content outline">
+            [rendersection:main]
+        </main>
 
-    <footer>
-        [block:footer]
-    </footer>
+        <div class="sidebar grid-right-content outline">
+            sidebar
+        </div>
+
+        <footer class="grid-bottom outline">
+            [block:footer]
+        </footer>
+
+    </div>
 
 </body>
 </html>
