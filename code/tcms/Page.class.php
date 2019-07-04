@@ -63,6 +63,9 @@ class Page
 
         if (!empty($this->template->getName())) {
             $this->setTemplateName($this->template->getName());
+        } else {
+            // if we could not find any template, just use default:
+            $this->setTemplateName('default');
         }
 
         // render template, this will insert the content of the sections at the appropriate place in the template:

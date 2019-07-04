@@ -29,7 +29,7 @@ class Router {
         }
 
         if ($this->context->config->getDebugLevel() >= $this->context->config::DEBUG_LEVEL_DEV) {
-            $sUrl=$sUrl.Tools::getURLDelemiter($sUrl)."_ijt=".Tools::get('_ijt','string','');
+            $sUrl=$sUrl.Tools::getURLDelimiter($sUrl)."_ijt=".Tools::get('_ijt','string','');
         }
 
         return $sUrl;

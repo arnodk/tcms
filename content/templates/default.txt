@@ -16,20 +16,22 @@
         </header>
 
         <nav class="grid-left-content outline">
-            left-menu
+            [block:menu]
         </nav>
 
-        <main class="grid-middle-content outline">
-            [rendersection:main]
-        </main>
+        <div class="grid-middle-content outline">
+            <main class="">
+                [rendersection:main]
+            </main>
+
+            <footer class="">
+                [block:footer]
+            </footer>
+        </div>
 
         <div class="sidebar grid-right-content outline">
             sidebar
         </div>
-
-        <footer class="grid-bottom outline">
-            [block:footer]
-        </footer>
 
     </div>
 

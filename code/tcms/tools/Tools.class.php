@@ -81,7 +81,7 @@ class Tools
         return $m;
     }
 
-    public static function getURLDelemiter($sUrl)
+    public static function getURLDelimiter($sUrl)
     {
         return ((strpos($sUrl,"?")===false)?"?":"&");
     }

@@ -3,7 +3,7 @@ namespace tcms;
 
 // load up necessities:
 require_once("Config.class.php");
-require_once("tools\Tools.class.php");
+require_once("tools/Tools.class.php");
 require_once("Context.class.php");
 require_once("Log.class.php");
 require_once("FileSystem.class.php");
@@ -21,7 +21,8 @@ require_once("Controller.class.php");
 class Startup {
     public static function boot() {
 
-        // include all command classes in command dir:
+        // include all command classes in command dir, but perhaps, it is better to include a command
+        // on demand in the renderer?
         foreach (glob(__DIR__."/commands/Command*.class.php") as $sFileName)
         {
             include_once $sFileName;
