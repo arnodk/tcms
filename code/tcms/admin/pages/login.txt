@@ -8,6 +8,7 @@
             <p>
                 <input type="password" class="form-control" id="pw" placeholder="Password">
             </p>
+            <div id="error"></div>
             <a id="btn-login" href="javascript://" class="btn btn-primary float-right">OK</a>
         </div>
     </div>
@@ -18,6 +19,8 @@
 tcms.setFocus('ln');
 tcms.setToken([newtoken]);
 tcms.apiEvent('btn-login','click','login','login',function() {
+        tcms.clearAlert('error')
+},function() {
         return {
             'login':document.getElementById("ln").value,
             'password':document.getElementById("pw").value
@@ -27,6 +30,7 @@ tcms.apiEvent('btn-login','click','login','login',function() {
             // redirect to admin dashboard
         } else {
             // display error message
+            tcms.alert('error', 'Invalid session, login or password.');
         }
 });
 [/section]

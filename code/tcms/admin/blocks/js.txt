@@ -7,19 +7,33 @@ class Tcms {
         document.getElementById(sId).focus();
     }
 
-    apiEvent(sId, sEvent, sSystem, sAction, fGenerateData, fResult) {
+    apiEvent(sId, sEvent, sSystem, sAction, fEvent, fGenerateData, fResult) {
         let oId = document.getElementById(sId);
         let me = this;
         if (sEvent==='click') {
             oId.addEventListener('click',function(event) {
+                if (typeof fEvent === 'function') fEvent();
                 me.apiCall(sSystem,sAction,fGenerateData(),fResult);
             });
         }
     }
 
+    alert(sId,sText) {
+        let oId = document.getElementById(sId)
+        oId.classList.remove("d-none");
+        oId.classList.add("alert");
+        oId.classList.add("alert-danger");
+        oId.innerHTML = 'Invalid session, login or password.';
+    }
+
+    clearAlert(sId) {
+        let oId = document.getElementById(sId)
+        oId.classList.add("d-none");
+    }
+
     apiCall(sSystem, sAction, oData={}, fResult) {
         var sUrl = "?_apitoken=" + this.token + "&system=" + sSystem + "&action=" + sAction;
-        this.postData(sUrl,oData).then(fResult());
+        this.postData(sUrl,oData).then(fResult);
     }
 
     setToken(sToken) {
