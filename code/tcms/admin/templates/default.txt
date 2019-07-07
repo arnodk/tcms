@@ -1,0 +1,24 @@
+<html>
+<head>
+    <link rel="stylesheet" type="text/css" href="[baseurl]/thirdparty/bootstrap/css/bootstrap.css">
+
+    <style>
+        /* standard css */
+        [blockadmin:css]
+        /* page specific css */
+        [rendersection:css]
+    </style>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // standard js
+            [blockadmin:js]
+            // page specific js
+            [rendersection:js]
+        }, false);
+    </script>
+</head>
+<body>
+    [rendersection:main]
+</body>
+</html>

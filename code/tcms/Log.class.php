@@ -42,7 +42,7 @@ class Log
                 break;
         }
 
-        $sPutToFile.="\t".$sRemoteAddr."\t".$sMessage."\n";
+        $sPutToFile.="\t\t".$sRemoteAddr."\t\t".$sMessage."\n";
 
         $fs = new FileSystem($this->context);
         $fs->append("log","log",$sPutToFile);

@@ -25,4 +25,11 @@ class Context
      * @var Log
      */
     public $log = NULL;
+
+    public function __construct()
+    {
+        $this->config = new Config();
+        $this->vars = new Variables();
+        $this->log = new Log($this);
+    }
 }

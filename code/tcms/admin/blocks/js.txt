@@ -1,0 +1,45 @@
+class Tcms {
+    constructor() {
+        this.token = '';
+    }
+
+    setFocus(sId) {
+        document.getElementById(sId).focus();
+    }
+
+    apiEvent(sId, sEvent, sSystem, sAction, fGenerateData, fResult) {
+        let oId = document.getElementById(sId);
+        let me = this;
+        if (sEvent==='click') {
+            oId.addEventListener('click',function(event) {
+                me.apiCall(sSystem,sAction,fGenerateData(),fResult);
+            });
+        }
+    }
+
+    apiCall(sSystem, sAction, oData={}, fResult) {
+        var sUrl = "?_apitoken=" + this.token + "&system=" + sSystem + "&action=" + sAction;
+        this.postData(sUrl,oData).then(fResult());
+    }
+
+    setToken(sToken) {
+        this.token = sToken;
+    }
+
+    postData(url = '', data = {}) {
+        return fetch(url, {
+            method: 'POST',
+            mode: 'same-origin',
+            cache: 'no-cache',
+            credentials: 'same-origin',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            referrer: 'no-referrer',
+            body: JSON.stringify(data)
+        })
+        .then(response => response.json());
+    }
+}
+
+let tcms = new Tcms();

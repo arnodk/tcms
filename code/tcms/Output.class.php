@@ -14,4 +14,9 @@ class Output
     public function push($sContent) {
         echo $sContent;
     }
+
+    public function json($a) {
+        $a = json_encode($a);
+        if (!empty($a)) $this->push($a);
+    }
 }

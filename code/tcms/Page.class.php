@@ -15,11 +15,14 @@ use tcms\tools\Tools;
 class Page
 {
     private $template = NULL;
-    private $sTitle = "";
     private $token = NULL;
     private $sHtml = "";
     private $aSections = array("default"=>"");
     private $sCurrentSection = "default";
+    private $iPageType = 0;
+
+    public const PAGE_CONTENT   = 1;
+    public const PAGE_ADMIN     = 2;
 
     private $context = false;
 
@@ -32,8 +35,10 @@ class Page
      */
     private $fs = NULL;
 
-    public function __construct(Context $context)
+    public function __construct(Context $context,$iPageType = self::PAGE_CONTENT)
     {
+        $this->iPageType = $iPageType;
+
         $this->context = $context;
 
         $this->fs = new FileSystem($this->context);
@@ -50,7 +55,12 @@ class Page
 
     public function setTemplateName($s) {
         $this->template->setName($s);
-        $this->template->load();
+        if ($this->iPageType==self::PAGE_CONTENT) {
+            $iTemplateType = Template::TEMPLATE_CONTENT;
+        } elseif ($this->iPageType==self::PAGE_ADMIN) {
+            $iTemplateType = Template::TEMPLATE_ADMIN;
+        }
+        if (!empty($iTemplateType) && !empty($s)) $this->template->load($iTemplateType);
     }
 
     public function run() {
@@ -96,10 +106,18 @@ class Page
 
     public function load($sPage) {
         // load and parse the page:
-        $token = Parser::parse($this->fs->load("page",$sPage));
-        if (!empty($token)) {
-            // render the parsed content:
-            $this->setToken($token);
+        if ( $this->iPageType==self::PAGE_CONTENT) {
+            $sCategory = "page";
+        } elseif ( $this->iPageType==self::PAGE_ADMIN) {
+            $sCategory = "page_admin";
+        }
+
+        if (!empty($sCategory)) {
+            $token = Parser::parse($this->fs->load($sCategory,$sPage));
+            if (!empty($token)) {
+                // render the parsed content:
+                $this->setToken($token);
+            }
         }
     }
 }

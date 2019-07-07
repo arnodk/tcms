@@ -19,7 +19,7 @@ class Tools
         $sProtocol = "";
 
         $sNormalized = trim(strtolower($sURL));
-        if (strpos($sURL,"://")!==false) {
+        if (strpos($sNormalized,"://")!==false) {
             $sPart = substr($sNormalized,0,strpos($sNormalized,"://"));
             // only return known protocols:
             switch($sPart) {
@@ -73,6 +73,10 @@ class Tools
             case "entities":
                 $m = htmlentities($sValue,ENT_QUOTES);
                 break;
+            case "phpvar":
+                // only allow a-zA-Z0-9
+                $m = preg_replace("/[^A-Za-z0-9]/", '', $sValue);
+                break;
             case "string":
             default:
                 $m = htmlspecialchars($sValue, ENT_QUOTES);
@@ -90,5 +94,14 @@ class Tools
     {
         if (strpos($sFileName,".")===false) return "";
         return substr($sFileName,strrpos($sFileName,".")+1);
+    }
+
+    public static function jsonPost($bAsAnArray=true) {
+        $payload = file_get_contents('php://input');
+
+        $data = json_decode($payload,$bAsAnArray);
+        if (empty($data) && $bAsAnArray) $data = array();
+
+        return $data;
     }
 }

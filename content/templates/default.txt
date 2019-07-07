@@ -4,11 +4,6 @@
 <link rel="stylesheet" type="text/css" href="[baseurl]/css/default.css">
 </head>
 <body>
-<!--
-    <nav class="navbar navbar-expand-md navbar-dark fixed-top bg-dark">
-        [block:menu-top]
-    </nav>
--->
     <div class="grid-default">
 
         <header class="grid-top outline">
@@ -30,7 +25,7 @@
         </div>
 
         <div class="sidebar grid-right-content outline">
-            sidebar
+            [block:sidebar]
         </div>
 
     </div>

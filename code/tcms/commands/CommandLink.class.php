@@ -41,6 +41,9 @@ class CommandLink extends Command
             } else {
                 $this->context->log->add("Unknown link requested: [".$this->sEndPoint."]");
             }
+        } else {
+            // this is probably a link to an external page, just return the link:
+            $sUrl = $this->sEndPoint;
         }
         return htmlspecialchars($sUrl);
     }

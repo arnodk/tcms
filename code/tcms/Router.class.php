@@ -1,6 +1,7 @@
 <?php
 namespace tcms;
 
+use tcms\controllers\Controller;
 use tcms\tools\Tools;
 
 class Router {
@@ -33,6 +34,25 @@ class Router {
         }
 
         return $sUrl;
+    }
+
+    /**
+     * @return null | Controller
+     */
+    public static function getController() {
+
+        $sSystem = Tools::get('system','phpvar','page');
+
+        $sName = '\tcms\controllers\Controller'.$sSystem;
+        if (class_exists($sName)) {
+            return new $sName();
+        } else {
+            // we are contextless here (they are usually initiated in the controller), so need a new context:
+            $context = new Context();
+            $context->log->add('could not load controller ['.$sName.']', $context->log::TYPE_ERROR);
+        }
+
+        return null;
     }
 
     public function determinePage() {

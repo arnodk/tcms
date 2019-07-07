@@ -118,6 +118,28 @@ class Token {
         return array();
     }
 
+    /**
+     * converts a string
+     *
+     * @param $sMatch
+     * @return array
+     */
+    public static function aParseArgs($sMatch) {
+        $sMatch = self::normalizeLabel($sMatch);
+        $a = explode(":",$sMatch);
+        // check for escaped delimiters:
+        foreach($a as $i=>$sPart) {
+            if (substr($sPart,strlen($sPart)-1)==='\\') {
+                // escaped parameter, add current part next value, without escape sign
+                $a[$i+1] = substr($sPart,0,-1).":".$a[$i+1];
+                // remove this part
+                array_splice($a,$i,1);
+            }
+        }
+
+        return $a;
+    }
+
     // search for [pq]text[/pq] type of labels, replace them with a placeholder {{x}}, and create a label for them.
     public function parse() {
         $aMatch = array();
@@ -127,7 +149,7 @@ class Token {
                 $aMatch=$aMatch[0];
                 $sMatch = $aMatch[0];
 
-                $aTokenArgs = explode(":", self::normalizeLabel($sMatch));
+                $aTokenArgs = self::aParseArgs($sMatch);
 
                 // first is label name:
                 $sTokenName = $aTokenArgs[0];

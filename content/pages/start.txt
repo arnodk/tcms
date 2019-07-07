@@ -1,21 +1,27 @@
-[title:My Homepage]
-
-[template:default]
-
-
 [section:main]
 
-[header]My Title[/header]
+[header]
+Web 1.0, still here.
+[/header]
 
 [text]
-Lorem ipsum dolor sit amet, [link:contact]consetetur [b]recursie [b]test[/b][/b][/link] sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.
+I have to admit, I do not like the social media outlets of today. But, to be entirely digitally introvert is not a
+viable solution either, these days. So, I took to that old trusty format, the personal homepage. It might very well be Web 1.0,
+but like the florescent green Hercules monitors way-back-when, it has a certain appeal. Last time I really sat down and tried to make something like this
+we were partying like it was 1999, because it literally was.
 [/text]
-
-[image:rm.jpg:w100]
 
 [text]
-Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.
+I can only guess why you are here. Probably, a google search went horribly, horribly wrong. But, if you are actually here due
+to genuine interest in whatever I am up to, you should find here the latest projects I am working on, and the stuff that I tend to be interested in.
 [/text]
+
+[text]
+On a side note, yes, this site is lacking any kind of design. Which, ironically, is by design. Those graphically heavy portfolio
+sites are not really my thing. Every time I go to [link:https\://docs.docker.com/]Docker's documentation[/link] or the [link:https\://developer.mozilla.org/en/]MDN docs[/link], I can't help but to think that
+those clean setups are exactly how websites should look like...
+[/text]
+
 
 [/section]
 

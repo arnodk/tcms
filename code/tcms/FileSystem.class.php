@@ -29,11 +29,23 @@ class FileSystem
         $sContentDir="";
 
         switch($sCategory) {
+            case "user":
+                $sContentDir = "/content/users";
+                break;
             case "page":
                 $sContentDir = "/content/pages";
                 break;
+            case "page_admin":
+                $sContentDir = "/code/tcms/admin/pages";
+                break;
+            case "template_admin":
+                $sContentDir = "/code/tcms/admin/templates";
+                break;
             case "block":
                 $sContentDir = "/content/blocks";
+                break;
+            case "block_admin":
+                $sContentDir = "/code/tcms/admin/blocks";
                 break;
             case "template":
                 $sContentDir = "/content/templates";
@@ -63,15 +75,13 @@ class FileSystem
 
         switch($sCategory) {
             case "page":
-                $sExtension="txt";
-                break;
+            case "page_admin":
+            case "template_admin":
             case "block":
-                $sExtension="txt";
-                break;
+            case "block_admin":
             case "template":
-                $sExtension="txt";
-                break;
             case "log":
+            case "user":
                 $sExtension="txt";
                 break;
             case "asset":
@@ -112,7 +122,11 @@ class FileSystem
     public function load($sCategory, $sFileName) {
 
         $sFullPath = $this->getFullPath($sCategory,$sFileName);
-        if (!file_exists($sFullPath)) return "";
+
+        if (!file_exists($sFullPath)) {
+            $this->context->log->add("Could not load file [".$sFullPath."} for category [".$sCategory."] and file name [".$sFileName."]",Log::TYPE_ERROR);
+            return "";
+        }
 
         return file_get_contents($sFullPath);
     }
@@ -126,6 +140,8 @@ class FileSystem
     public function bExists($sCategory,$sFileName) {
 
         $sFullPath = $this->getFullPath($sCategory,$sFileName);
+
+        $this->context->log->add("Looking for: ".$sFullPath);
 
         return file_exists($sFullPath);
     }

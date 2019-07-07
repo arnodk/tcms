@@ -24,4 +24,8 @@ class Config {
     public function getDebugLevel() {
         return self::DEBUG_LEVEL_DEV;
     }
+
+    public function getStaticSalt() {
+        return ".!..at";
+    }
 }

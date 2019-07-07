@@ -24,6 +24,8 @@ class Template
     private $context = NULL;
     private $sHtml = '';
 
+    public const TEMPLATE_CONTENT   = 1;
+    public const TEMPLATE_ADMIN     = 2;
 
     public function __construct($context)
     {
@@ -45,12 +47,20 @@ class Template
         return $this->sName;
     }
 
-    public function load() {
-        // load and parse the page:
-        $token = Parser::parse($this->fs->load("template",$this->sName));
-        if (!empty($token)) {
-            // render the parsed content:
-            $this->setToken($token);
+    public function load($iTemplateType=self::TEMPLATE_CONTENT) {
+        if ($iTemplateType==self::TEMPLATE_CONTENT) {
+            $sCategory = "template";
+        } elseif ($iTemplateType==self::TEMPLATE_ADMIN) {
+            $sCategory = "template_admin";
+        }
+
+        if (!empty($sCategory)) {
+            // load and parse the page:
+            $token = Parser::parse($this->fs->load($sCategory,$this->sName));
+            if (!empty($token)) {
+                // render the parsed content:
+                $this->setToken($token);
+            }
         }
     }
 

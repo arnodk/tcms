@@ -1,1 +1,8 @@
-# Created by .ignore support plugin (hsz.mobi)
+logs/*
+content/blocks/*
+content/pages/*
+content/users/*
+todo/*
+public/assets/*
+public/thirdparty/*
+public/css/*

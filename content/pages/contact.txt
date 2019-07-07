@@ -1,9 +1,0 @@
-[title:Contact]
-
-[template:default]
-
-[section:main]
-
-[header]Where to find me?[/header]
-
-[/section]

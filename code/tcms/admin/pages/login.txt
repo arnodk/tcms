@@ -1,0 +1,33 @@
+[section:main]
+<div class="login-page">
+    <div class="login-form">
+        <div class="form-group">
+            <p>
+                <input type="text" class="form-control" id="ln" placeholder="Login">
+            </p>
+            <p>
+                <input type="password" class="form-control" id="pw" placeholder="Password">
+            </p>
+            <a id="btn-login" href="javascript://" class="btn btn-primary float-right">OK</a>
+        </div>
+    </div>
+</div>
+[/section]
+
+[section:js]
+tcms.setFocus('ln');
+tcms.setToken([newtoken]);
+tcms.apiEvent('btn-login','click','login','login',function() {
+        return {
+            'login':document.getElementById("ln").value,
+            'password':document.getElementById("pw").value
+        };
+    },function(result) {
+        if (result.status === 'OK') {
+            // redirect to admin dashboard
+        } else {
+            // display error message
+        }
+});
+[/section]
+
