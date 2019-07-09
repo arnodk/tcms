@@ -198,4 +198,13 @@ class Token {
 
         return true;
     }
+
+    /**
+     * do not parse text, just remove all tokens / labels:
+     * @param $sText
+     * @return null|string|string[]
+     */
+    public static function removeTokens($sText) {
+        return preg_replace('/\[([^\]]+)\]/', '', $sText);
+    }
 }

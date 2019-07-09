@@ -20,7 +20,6 @@ class ControllerLogin extends Controller
     }
 
     public function run($sAction='') {
-
         switch($sAction) {
             case 'login':
                 $bStatus = false;

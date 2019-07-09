@@ -1,7 +1,7 @@
 <html>
 <head>
     <link rel="stylesheet" type="text/css" href="[baseurl]/thirdparty/bootstrap/css/bootstrap.css">
-
+    <link rel="stylesheet" type="text/css" href="[baseurl]/thirdparty/fontawesome/css/all.min.css">
     <style>
         /* standard css */
         [blockadmin:css]

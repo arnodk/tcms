@@ -124,11 +124,17 @@ class FileSystem
         $sFullPath = $this->getFullPath($sCategory,$sFileName);
 
         if (!file_exists($sFullPath)) {
-            $this->context->log->add("Could not load file [".$sFullPath."} for category [".$sCategory."] and file name [".$sFileName."]",Log::TYPE_ERROR);
+            $this->context->log->add("Could not load file [".$sFullPath."] for category [".$sCategory."] and file name [".$sFileName."]",Log::TYPE_ERROR);
             return "";
         }
 
         return file_get_contents($sFullPath);
+    }
+
+    public function save($sCategory, $sName, $sData) {
+        $sFullPath = $this->getFullPath($sCategory,$sName);
+
+        return file_put_contents($sFullPath,$sData);
     }
 
     public function append($sCategory,$sFileName,$sData) {
@@ -144,5 +150,20 @@ class FileSystem
         $this->context->log->add("Looking for: ".$sFullPath);
 
         return file_exists($sFullPath);
+    }
+
+    public function list($sCategory,$bRemoveExtension=true) {
+        $sDir = $this->getCategoryDir($sCategory);
+        $a = array();
+
+        foreach (glob($sDir."/*") as $sFilename) {
+            if ($sFilename!="." && $sFilename!="..") {
+                $sFilename = substr($sFilename,strrpos($sFilename, "/") + 1);
+                if ($bRemoveExtension && strpos($sFilename,".")!==false) $sFilename = substr($sFilename,0,strpos($sFilename, "."));
+                $a[] = $sFilename;
+            }
+        }
+
+        return $a;
     }
 }

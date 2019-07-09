@@ -1,6 +1,8 @@
 class Tcms {
+
     constructor() {
         this.token = '';
+        this.base = '[baseurl]/index.php';
     }
 
     setFocus(sId) {
@@ -18,6 +20,13 @@ class Tcms {
         }
     }
 
+    goto(sSystem,sAction) {
+        if (sSystem == "") return;
+        let sUrl = this.base + '?system=' + sSystem;
+        if (sAction!="") sUrl = sUrl + '&action=' + sAction;
+        window.location.href = sUrl;
+    }
+
     alert(sId,sText) {
         let oId = document.getElementById(sId)
         oId.classList.remove("d-none");
@@ -32,7 +41,7 @@ class Tcms {
     }
 
     apiCall(sSystem, sAction, oData={}, fResult) {
-        var sUrl = "?_apitoken=" + this.token + "&system=" + sSystem + "&action=" + sAction;
+        var sUrl = this.base + "?_apitoken=" + this.token + "&system=" + sSystem + "&action=" + sAction;
         this.postData(sUrl,oData).then(fResult);
     }
 
@@ -53,6 +62,49 @@ class Tcms {
             body: JSON.stringify(data)
         })
         .then(response => response.json());
+    }
+
+    addCard(sId,sTitle,sSubTitle,sDescription,sLinks) {
+        let oId = document.getElementById(sId);
+        let card = document.createElement('div');
+        card.classList.add('card');
+        card.innerHTML = '\
+                <div class="card-body">\
+                    <h5 class="card-title">'+sTitle+'</h5>\
+                    <h6 class="card-subtitle mb-2 text-muted">'+sSubTitle+'</h6>\
+                    <p class="card-text">'+sDescription+'</p>\
+                    '+sLinks+'\
+                </div>\
+        ';
+        oId.appendChild(card);
+    }
+
+    attachEditor(sId,sContent) {
+        let oId = document.getElementById(sId);
+        let sEditorId = sId + 'Editor';
+        oId.innerHTML = '<textarea id="'+sEditorId+'" class="tcmsEditor form-control">'+sContent+'</textarea>';
+    }
+
+    addButton(sId,sButtonId,fOnClick,sCaption,sMode) {
+        let oId = document.getElementById(sId);
+        let button = document.createElement('a');
+        button.classList.add('btn');
+        button.classList.add('btn-'+sMode);
+        button.innerHTML = sCaption;
+        button.addEventListener('click',fOnClick);
+        button.setAttribute("id",sButtonId);
+        button.setAttribute("href","javascript://");
+        oId.appendChild(button);
+    }
+
+    getEditor(sId) {
+        return document.getElementById(sId + 'Editor');
+    }
+
+    escape(s) {
+        s = s.replace("'","\\'");
+        s = s.replace('"','\\"');
+        return s;
     }
 }
 

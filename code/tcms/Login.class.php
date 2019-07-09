@@ -17,6 +17,24 @@ class Login {
         $this->context = $c;
     }
 
+    public static function hasGroup($s)
+    {
+        @session_start();
+
+        // get user from session, if present:
+        if (empty($_SESSION['tcms_login'])) return false; // not logged in, we are done.
+
+        $login = unserialize($_SESSION['tcms_login']);
+        if (!($login instanceof Login)) return false; // unexpected content of tcms_login.
+
+        return $login->inGroups($s);
+    }
+
+    public function inGroups($s) {
+        $s=trim(strtolower($s));
+        return in_array($s,$this->aGroups);
+    }
+
     private function init() {
         $this->sUser = "";
         $this->sHash = "";
@@ -33,7 +51,7 @@ class Login {
         if (!empty($a['hash'])) {
             $this->sHash=$a['hash'];
         }
-        if (!empty($a['groups']) && is_array($a['groups'])) $this->aGroups = $a['groups'];
+        if (!empty($a['groups'])) $this->aGroups = explode(",",$a['groups']);
     }
 
     public function loadForUser($s) {

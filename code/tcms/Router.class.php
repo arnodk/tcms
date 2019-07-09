@@ -73,4 +73,22 @@ class Router {
         return $sUrl;
     }
 
+    public function redirect($sSystem,$sAction='') {
+        $sUrl = "";
+
+        if ($this->context->config->getURLMode()===$this->context->config::FRIENDLY_URL_MODE_PARAM) {
+            $sUrl=$this->context->config->getBaseURL()."/index.php?system=".$sSystem;
+            if (!empty($sAction)) $sUrl.="&action=".$sAction;
+        } elseif ($this->context->config->getURLMode()===$this->context->config::FRIENDLY_URL_MODE_SEO) {
+            $sUrl=$this->context->config->getBaseURL()."/".$sSystem;
+            if (!empty($sAction)) $sUrl.="/".$sAction;
+        }
+
+        if (!empty($sUrl)) {
+            header("Location: ".$sUrl);
+            return true;
+        }
+
+        return false;
+    }
 }

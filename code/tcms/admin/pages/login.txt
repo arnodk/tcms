@@ -28,6 +28,7 @@ tcms.apiEvent('btn-login','click','login','login',function() {
     },function(result) {
         if (result.status === 'OK') {
             // redirect to admin dashboard
+            tcms.goto('dashboard','');
         } else {
             // display error message
             tcms.alert('error', 'Invalid session, login or password.');

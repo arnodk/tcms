@@ -1,0 +1,110 @@
+[section:main]
+<div class="dashboard-page">
+    <div class="grid-default">
+        <div class="grid-top">tcms dashboard</div>
+        <div class="grid-left-content">
+            <ul>
+                <li onclick="dashboardFireEvent(this)" class="dashboard-menu-item" data-system="page" data-action="list"><i class="fas fa-file-alt"></i>Pages</li>
+                <li onclick="dashboardFireEvent(this)" class="dashboard-menu-item" data-system="block" data-action="list"><i class="fas fa-box"></i>Blocks</li>
+                <li onclick="dashboardFireEvent(this)" class="dashboard-menu-item" data-system="templates" data-action="list"><i class="fas fa-file-code"></i>Templates</li>
+                <li onclick="dashboardFireEvent(this)" class="dashboard-menu-item" data-system="file" data-action="list"><i class="fas fa-file"></i>Assets</li>
+                <li onclick="dashboardFireEvent(this)" class="dashboard-menu-item" data-system="log" data-action="list"><i class="fas fa-server"></i>Logs</li>
+                <li onclick="dashboardFireEvent(this)" class="dashboard-menu-item" data-system="login" data-action="list"><i class="fas fa-user"></i>Users</li>
+            </ul>
+        </div>
+        <div class="grid-middle-content">
+            <div id="content">
+                <div class="card" >
+                  <div class="card-body">
+                    <h5 class="card-title">Card title</h5>
+                    <h6 class="card-subtitle mb-2 text-muted">Card subtitle</h6>
+                    <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
+                    <a href="#" class="card-link">Card link</a>
+                    <a href="#" class="card-link">Another link</a>
+                  </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+[/section]
+
+[section:js]
+tcms.setToken([newtoken]);
+
+var sSystem = '';
+var sAction = '';
+
+window.dashboardFireEvent = function(oLink) {
+    sSystem = oLink.getAttribute('data-system');
+    sAction = oLink.getAttribute('data-action');
+    tcms.apiCall(sSystem,sAction,{},function(result) {
+        let oId = document.getElementById('content');
+        oId.innerHTML = '';
+        tcms.addButton('content','btnAddPage',function() {
+            var sPageName = prompt('Page name:');
+            if (sPageName!=null && sPageName!="") {
+                window.dashboardAddPage(tcms.escape(sPageName));
+            }
+        },'add page','primary');
+        if (result.status==='OK') {
+            if (sSystem === 'page') {
+                let items = result.pages;
+                if (Array.isArray(items)) {
+                    items.forEach(function(item) {
+                        tcms.addCard('content',item.name,'...',item.summary,'\
+                            <a href="javascript://" onclick="dashboardEditPage(this)" data-name="'+item.nameSafe+'" class="card-link">edit</a>\
+                        ');
+                    });
+                }
+            } else if (sSystem==='block') {
+
+            }
+        }
+    });
+}
+
+window.dashboardEditPage = function(link) {
+    var sName = link.getAttribute('data-name');
+
+    tcms.apiCall('page','edit',{
+             'page':sName
+    },function(result) {
+            var oId = document.getElementById('content');
+            oId.innerHTML = '';
+            if (result.status==='OK') {
+                if (typeof result.content != 'undefined') {
+                    tcms.attachEditor('content', result.content);
+                    tcms.getEditor('content').setAttribute('data-page-name',sName);
+                    tcms.addButton('content','btnSavePage',window.savePage,'save','primary');
+                }
+            }
+    });
+}
+
+window.dashboardAddPage = function(sName) {
+    document.getElementById('content').innerHTML = '';
+
+    tcms.attachEditor('content', '');
+    tcms.getEditor('content').setAttribute('data-page-name',sName);
+    tcms.addButton('content','btnSavePage',window.savePage,'save','primary');
+}
+
+window.savePage = function() {
+    var sContent = tcms.getEditor('content').value;
+    var sName = tcms.getEditor('content').getAttribute('data-page-name')
+
+    tcms.apiCall('page','save',{
+             'page':sName,
+             'content':sContent
+    },function(result) {
+            var oId = document.getElementById('content');
+            oId.innerHTML = '';
+            if (result.status==='OK') {
+                alert('content saved');
+            }
+    });
+}
+
+[/section]
+
