@@ -40,8 +40,12 @@ class Tcms {
         oId.classList.add("d-none");
     }
 
+    apiUrl(sSystem, sAction) {
+       return this.base + "?_apitoken=" + this.token + "&system=" + sSystem + "&action=" + sAction;
+    }
+
     apiCall(sSystem, sAction, oData={}, fResult) {
-        var sUrl = this.base + "?_apitoken=" + this.token + "&system=" + sSystem + "&action=" + sAction;
+        var sUrl = this.apiUrl(sSystem, sAction);
         this.postData(sUrl,oData).then(fResult);
     }
 

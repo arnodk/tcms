@@ -13,9 +13,11 @@ use tcms\commands\Command;
 class Render
 {
     public static function getCommand(Token $token, $context) {
-        $sName = '\tcms\commands\Command'.$token->getName();
-        if (class_exists($sName)) {
-            return new $sName($token,$context);
+        if (!empty($token->getName())) {
+            $sName = '\tcms\commands\Command'.$token->getName();
+            if (class_exists($sName)) {
+                return new $sName($token,$context);
+            }
         }
         return false;
     }
@@ -25,7 +27,15 @@ class Render
 
         if ($bRenderSelf) {
             $command = self::getCommand($token, $context);
-            if ($command instanceof Command) $sContent .= $command->render();
+            if ($command instanceof Command) {
+                $sContent .= $command->render();
+            } else {
+                // not a command, give it back as is:
+                $sContent .= "[".$token->getOriginalName()."]".$token->getContent();
+                if ($token->hasClosingTag()) {
+                    $sContent .= "{/".$token->getOriginalName()."]";
+                }
+            }
         } else {
             // do not render self, but do use its content to fill up the placeholders:
             $sContent .= $token->getContent();

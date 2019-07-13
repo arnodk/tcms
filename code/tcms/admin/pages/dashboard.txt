@@ -7,7 +7,7 @@
                 <li onclick="dashboardFireEvent(this)" class="dashboard-menu-item" data-system="page" data-action="list"><i class="fas fa-file-alt"></i>Pages</li>
                 <li onclick="dashboardFireEvent(this)" class="dashboard-menu-item" data-system="block" data-action="list"><i class="fas fa-box"></i>Blocks</li>
                 <li onclick="dashboardFireEvent(this)" class="dashboard-menu-item" data-system="templates" data-action="list"><i class="fas fa-file-code"></i>Templates</li>
-                <li onclick="dashboardFireEvent(this)" class="dashboard-menu-item" data-system="file" data-action="list"><i class="fas fa-file"></i>Assets</li>
+                <li onclick="dashboardFireEvent(this)" class="dashboard-menu-item" data-system="asset" data-action="list"><i class="fas fa-file"></i>Assets</li>
                 <li onclick="dashboardFireEvent(this)" class="dashboard-menu-item" data-system="log" data-action="list"><i class="fas fa-server"></i>Logs</li>
                 <li onclick="dashboardFireEvent(this)" class="dashboard-menu-item" data-system="login" data-action="list"><i class="fas fa-user"></i>Users</li>
             </ul>
@@ -16,7 +16,7 @@
             <div id="content">
                 <div class="card" >
                   <div class="card-body">
-                    <h5 class="card-title">Card title</h5>
+                    <h5 class="card-title">TCMS dashboard</h5>
                     <h6 class="card-subtitle mb-2 text-muted">Card subtitle</h6>
                     <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
                     <a href="#" class="card-link">Card link</a>
@@ -41,14 +41,16 @@ window.dashboardFireEvent = function(oLink) {
     tcms.apiCall(sSystem,sAction,{},function(result) {
         let oId = document.getElementById('content');
         oId.innerHTML = '';
-        tcms.addButton('content','btnAddPage',function() {
-            var sPageName = prompt('Page name:');
-            if (sPageName!=null && sPageName!="") {
-                window.dashboardAddPage(tcms.escape(sPageName));
-            }
-        },'add page','primary');
+
         if (result.status==='OK') {
             if (sSystem === 'page') {
+                tcms.addButton('content','btnAddPage',function() {
+                    var sPageName = prompt('Page name:');
+                    if (sPageName!=null && sPageName!="") {
+                        window.dashboardAddPage(tcms.escape(sPageName));
+                    }
+                },'add page','primary');
+
                 let items = result.pages;
                 if (Array.isArray(items)) {
                     items.forEach(function(item) {
@@ -59,9 +61,46 @@ window.dashboardFireEvent = function(oLink) {
                 }
             } else if (sSystem==='block') {
 
+            } else if (sSystem==='asset') {
+                var div = document.createElement('div')
+                div.innerHTML = result.form;
+                oId.append(div);
+                window.dashboardSetAssetHandlers();
             }
         }
     });
+}
+
+window.dashboardUploadFile = function(evt) {
+    var files = document.getElementById('files').files;
+    for (var j = 0; j <files.length; j++) {
+        var blob = files[j];
+        console.log('chunking');
+        const BYTES_PER_CHUNK = 1024 * 1024;
+        // 1MB chunk sizes.
+        const SIZE = blob.size;
+
+        var start = 0;
+        var end = BYTES_PER_CHUNK;
+
+        while (start < SIZE) {
+
+
+            var chunk = blob.slice(start, end);
+
+            var xhr = new XMLHttpRequest();
+            xhr.open('POST', tcms.apiUrl('asset','upload'), false);
+            xhr.onload = function(e) {};
+            xhr.send(blob);
+
+            start = end;
+            end = start + BYTES_PER_CHUNK;
+        }
+    }
+}
+
+window.dashboardSetAssetHandlers = function() {
+    document.getElementById('files').addEventListener('change', window.dashboardUploadFile, false);
 }
 
 window.dashboardEditPage = function(link) {

@@ -14,17 +14,23 @@ use tcms\tools\Tools;
 
 class Token {
     private $sName="";
+    private $sOriginalName="";
     private $aArgs = array();
     private $aTokens = array(); // subtree, referred to in content with keys ala {{key}}
     private $sContent = "";
     private $sId = "";
     private $iTokenIndex = 0;
+    private $bHasClosingTag = false;
 
-    public function __construct($sName="",$aArgs="", $sContent="")
+    public function __construct($sName="",$aArgs="", $sContent="", $bHasClosingTag=false)
     {
-        if (!empty($sName)) $this->sName = strtolower($sName);
+        if (!empty($sName)) {
+            $this->sName = strtolower($sName);
+        }
         if (is_array($aArgs)) $this->aArgs=$aArgs;
 
+        $this->sOriginalName = $sName;
+        $this->bHasClosingTag = $bHasClosingTag;
         $this->sContent = $sContent;
 
         // get an id:
@@ -52,6 +58,14 @@ class Token {
 
     public function getName() {
         return $this->sName;
+    }
+
+    public function hasClosingTag() {
+        return $this->bHasClosingTag;
+    }
+
+    public function getOriginalName() {
+        return $this->sOriginalName;
     }
 
     public function getId() {
@@ -146,6 +160,8 @@ class Token {
         $i=0;
         while(preg_match('/\[([^\]]+)\]/', $this->sContent, $aMatch, PREG_OFFSET_CAPTURE)) {
             if (!empty($aMatch) && is_array($aMatch) && count($aMatch) >= 2) {
+                $bClosingTagFound = false;
+
                 $aMatch=$aMatch[0];
                 $sMatch = $aMatch[0];
 
@@ -169,7 +185,7 @@ class Token {
                     $iClosingPos = $aPosClosingMatch[1] + strlen($aPosClosingMatch[0]);
 
                     $sContent = substr($this->sContent, $iPosMatch, $aPosClosingMatch[1] - $iPosMatch);
-
+                    $bClosingTagFound = true;
                 } else {
                     // no end tag found, so no content to load it up with.
                     $iClosingPos = $iPosMatch;
@@ -180,7 +196,7 @@ class Token {
                 array_splice($aTokenArgs, 0, 1);
 
                 // enough information collected to create the token:
-                $token = new Token($sTokenName, $aTokenArgs, $sContent);
+                $token = new Token($sTokenName, $aTokenArgs, $sContent, $bClosingTagFound);
 
                 // store token to current token's subtree:
                 $this->addToken($token);
