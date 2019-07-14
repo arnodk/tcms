@@ -1,12 +1,12 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: arno
- * Date: 16.06.2019
- * Time: 21:42
- */
 namespace tcms\commands;
 
+/**
+ * Class CommandTemplate
+ * @package tcms\commands
+ *
+ * set the template for this page.
+ */
 class CommandTemplate extends Command
 {
     public function render() {

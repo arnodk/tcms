@@ -1,10 +1,4 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: arno
- * Date: 16.06.2019
- * Time: 21:42
- */
 namespace tcms\commands;
 
 use tcms\FileSystem;
@@ -13,6 +7,12 @@ use tcms\Router;
 use tcms\tools\Tools;
 use tcms\VerifyToken;
 
+/**
+ * Class CommandNewToken
+ * @package tcms\commands
+ *
+ * generate a new verify-token to be used in, e.g., api calls.
+ */
 class CommandNewToken extends Command
 {
 

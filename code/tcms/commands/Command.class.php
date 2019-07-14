@@ -1,15 +1,15 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: arno
- * Date: 16.06.2019
- * Time: 21:42
- */
 namespace tcms\commands;
 use tcms\Context;
 use tcms\Label;
 use tcms\Token;
 
+/**
+ * Class Command
+ * @package tcms\commands
+ *
+ * base class for all commands, contains the token for this command, and the context holding e.g. the active configuration.
+ */
 class Command
 {
     protected $token = false;

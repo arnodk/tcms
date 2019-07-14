@@ -1,14 +1,15 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: arno
- * Date: 16.06.2019
- * Time: 21:42
- */
 namespace tcms\commands;
 
 use tcms\Render;
 
+/**
+ * Class CommandSection
+ * @package tcms\commands
+ *
+ * renders the content between the start and end section tag, and store it in a context bound variable.
+ *
+ */
 class CommandSection extends Command
 {
     public function render() {

@@ -1,14 +1,14 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: arno
- * Date: 16.06.2019
- * Time: 21:42
- */
 namespace tcms\commands;
 
 use tcms\Render;
 
+/**
+ * Class CommandRenderSection
+ * @package tcms\commands
+ *
+ * render the contents of the section referenced to in the token.
+ */
 class CommandRenderSection extends Command
 {
     public function render() {
