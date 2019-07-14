@@ -1,11 +1,4 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: arno
- * Date: 01.07.2019
- * Time: 11:40
- */
-
 namespace tcms;
 
 

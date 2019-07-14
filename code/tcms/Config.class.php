@@ -26,6 +26,7 @@ class Config {
     }
 
     public function getStaticSalt() {
+        // TODO: use dynamic salts
         return ".!..at";
     }
 }

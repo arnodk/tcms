@@ -1,14 +1,14 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: arno
- * Date: 23.06.2019
- * Time: 19:24
- */
-
 namespace tcms;
 
 
+/**
+ * Class Variables
+ * @package tcms
+ *
+ * used as quasi-global storage for variables used during rendering templates, blocks and pages by creating an instance of this as a context property.
+ * e.g., section names will be stored via this class, so that at, a later stage of rendering, they can be referenced to.
+ */
 class Variables
 {
     public const TYPE_STRING = 0;

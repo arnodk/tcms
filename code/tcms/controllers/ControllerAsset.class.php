@@ -1,16 +1,11 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: arno
- * Date: 05.07.2019
- * Time: 13:12
- */
 namespace tcms\controllers;
 
 use tcms\FileSystem;
 use tcms\Login;
 use tcms\Page;
 use tcms\tools\Tools;
+use tcms\VerifyToken;
 
 class ControllerAsset extends Controller
 {
@@ -34,7 +29,7 @@ class ControllerAsset extends Controller
 
     private function form() {
         $a = array();
-        if (Login::hasGroup("admin")) {
+        if (VerifyToken::apiTokenCheck() && Login::hasGroup("admin")) {
             $fs = new FileSystem($this->context);
             $sFileName = "asset-upload-form";
             $sForm = $fs->load('block_admin', $sFileName);
@@ -47,7 +42,7 @@ class ControllerAsset extends Controller
     }
 
     private function upload() {
-        if (Login::hasGroup("admin")) {
+        if (VerifyToken::apiTokenCheck() && Login::hasGroup("admin")) {
             $payload = file_get_contents('php://input');
             $fs = new FileSystem($this->context);
             if (!$fs->bExists('asset','mytest.jpg')) {

@@ -1,16 +1,14 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: arno
- * Date: 06.07.2019
- * Time: 15:27
- */
-
 namespace tcms;
-
 
 use tcms\tools\Tools;
 
+/**
+ * Class VerifyToken
+ * @package tcms
+ *
+ * generate and check tokens used during api communication
+ */
 class VerifyToken
 {
 
@@ -34,11 +32,22 @@ class VerifyToken
         return rtrim( strtr( base64_encode( random_bytes(20)), '+/', '-_'), '=');
     }
 
+    /**
+     * checks if $s is a registered token.
+     *
+     * @param $s
+     * @return bool
+     */
     public function check($s) {
         if (empty($_SESSION['tcms_verify_tokens']) || !is_array($_SESSION['tcms_verify_tokens'])) return false;
         return in_array($s,$_SESSION['tcms_verify_tokens']);
     }
 
+    /**
+     * add $s as a registered token,
+     *
+     * @param $s
+     */
     public function add($s) {
         if (empty($_SESSION['tcms_verify_tokens']) || !is_array($_SESSION['tcms_verify_tokens'])) $_SESSION['tcms_verify_tokens'] = array();
         $_SESSION['tcms_verify_tokens'][] = $s;
@@ -57,6 +66,11 @@ class VerifyToken
         return true;
     }
 
+    /**
+     * takes the _apitoken parameter, and check if its value is a registered token.
+     *
+     * @return bool
+     */
     public static function apiTokenCheck() {
         $bResult = false;
         $sToken = Tools::request('_apitoken','string','');

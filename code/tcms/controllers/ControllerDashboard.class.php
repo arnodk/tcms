@@ -1,10 +1,4 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: arno
- * Date: 05.07.2019
- * Time: 13:12
- */
 namespace tcms\controllers;
 
 use tcms\Log;
@@ -12,6 +6,7 @@ use tcms\Login;
 use tcms\Page;
 use tcms\Router;
 use tcms\tools\Tools;
+use tcms\VerifyToken;
 
 class ControllerDashboard extends Controller
 {
@@ -30,11 +25,13 @@ class ControllerDashboard extends Controller
 
         switch ($sAction) {
             default:
-                $page = new Page($this->context, Page::PAGE_ADMIN);
-                $page->load("dashboard");
-                $sToOutput = $page->run();
-                if (!empty($sToOutput)) {
-                    $this->output->push($sToOutput);
+                if (VerifyToken::apiTokenCheck()) {
+                    $page = new Page($this->context, Page::PAGE_ADMIN);
+                    $page->load("dashboard");
+                    $sToOutput = $page->run();
+                    if (!empty($sToOutput)) {
+                        $this->output->push($sToOutput);
+                    }
                 }
         }
     }

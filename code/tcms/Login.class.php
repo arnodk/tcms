@@ -3,6 +3,13 @@ namespace tcms;
 
 use tcms\tools\Tools;
 
+/**
+ * Class Login
+ * @package tcms
+ *
+ * wraps around user info, and can be attached to a session, to represent a logged-in user.
+ *
+ */
 class Login {
     /**
      * @var null|Context
@@ -65,6 +72,7 @@ class Login {
     public function pw($s) {
         if (empty($this->sHash)) return false;
 
+        // todo: use dynamic salts, not a static one:
         if (hash('sha512',$this->context->config->getStaticSalt()."||".$s) === $this->sHash) return true;
         return false;
     }

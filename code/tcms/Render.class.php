@@ -1,17 +1,26 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: arno
- * Date: 10.06.2019
- * Time: 20:12
- */
+
 
 namespace tcms;
 
 use tcms\commands\Command;
 
+/**
+ * Class Render
+ * @package tcms
+ *
+ * traverse a token tree, and match found tokens with commands.
+ */
 class Render
 {
+    /**
+     * takes a token, retrieves its name, and tries to locate matching command class.
+     * if none was found, false is returned, otherwise the command class is returned.
+     *
+     * @param Token $token
+     * @param $context
+     * @return bool | Token
+     */
     public static function getCommand(Token $token, $context) {
         if (!empty($token->getName())) {
             $sName = '\tcms\commands\Command'.$token->getName();
@@ -22,6 +31,14 @@ class Render
         return false;
     }
 
+    /**
+     * traverse token tree, and replace the token place holders with the result of executed commands.
+     *
+     * @param Token $token
+     * @param $context
+     * @param bool $bRenderSelf
+     * @return mixed|string
+     */
     public static function render(Token $token, $context, $bRenderSelf=true) {
         $sContent = "";
 

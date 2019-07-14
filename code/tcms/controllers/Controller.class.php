@@ -1,10 +1,4 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: arno
- * Date: 10.06.2019
- * Time: 19:03
- */
 namespace tcms\controllers;
 
 use tcms;

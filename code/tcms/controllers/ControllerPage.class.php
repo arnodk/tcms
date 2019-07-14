@@ -1,16 +1,17 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: arno
- * Date: 05.07.2019
- * Time: 13:12
- */
 namespace tcms\controllers;
 
 use tcms\Login;
 use tcms\Page;
 use tcms\tools\Tools;
+use tcms\VerifyToken;
 
+/**
+ * Class ControllerPage
+ * responsible for displaying and editing of "normal" tcms pages found in content/pages directory.
+ *
+ * @package tcms\controllers
+ */
 class ControllerPage extends Controller
 {
     public function __construct()
@@ -44,9 +45,14 @@ class ControllerPage extends Controller
 
     }
 
+    /**
+     * takes a posted page, saves it and returns a json object with 'status'=>'OK' when successful.
+     *
+     * @return array
+     */
     private function save() {
         $aResult = array();
-        if (Login::hasGroup("admin")) {
+        if (VerifyToken::apiTokenCheck() && Login::hasGroup("admin")) {
             $aParam = Tools::jsonPost();
             $sPage = $aParam['page'];
             $sContent = $aParam['content'];
@@ -62,9 +68,15 @@ class ControllerPage extends Controller
         return $aResult;
     }
 
+    /**
+     * takes a posted page name, and, if found, returns a json object with page info and content.
+     * an empty json object is returned, if the page could not be returned
+     *
+     * @return array
+     */
     private function edit() {
         $aResult = array();
-        if (Login::hasGroup("admin")) {
+        if (VerifyToken::apiTokenCheck() && Login::hasGroup("admin")) {
             $aParam = Tools::jsonPost();
             $sPage = $aParam['page'];
             if (!empty($sPage)) {
@@ -80,9 +92,15 @@ class ControllerPage extends Controller
         return $aResult;
     }
 
+    /**
+     * returns a json object with empty page content.
+     * an entirely empty json object is returned, if the user has no rights to view this page.
+     *
+     * @return array
+     */
     private function add() {
         $aResult = array();
-        if (Login::hasGroup("admin")) {
+        if (VerifyToken::apiTokenCheck() && Login::hasGroup("admin")) {
             $aParam = Tools::jsonPost();
             $sPage = $aParam['page'];
 
@@ -94,6 +112,11 @@ class ControllerPage extends Controller
         return $aResult;
     }
 
+    /**
+     * calls the router to figure out which page is being requested, and try to display it
+     *
+     * @return string
+     */
     private function view() {
         // which page are we on?
         $sPage = $this->router->determinePage();
@@ -103,9 +126,14 @@ class ControllerPage extends Controller
         return $page->run();
     }
 
+    /**
+     * return an array of all pages
+     *
+     * @return array
+     */
     private function list() {
         $aResult = array();
-        if (Login::hasGroup("admin")) {
+        if (VerifyToken::apiTokenCheck() && Login::hasGroup("admin")) {
             $page = new Page($this->context);
 
             // tell caller everything turned out well:

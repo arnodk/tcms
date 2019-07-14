@@ -1,10 +1,4 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: arno
- * Date: 05.07.2019
- * Time: 13:12
- */
 namespace tcms\controllers;
 
 use tcms\Login;
@@ -12,6 +6,12 @@ use tcms\Page;
 use tcms\tools\Tools;
 use tcms\VerifyToken;
 
+/**
+ * Class ControllerLogin
+ * @package tcms\controllers
+ *
+ * controller responsible for updating and logging in of users
+ */
 class ControllerLogin extends Controller
 {
     public function __construct()

@@ -9,7 +9,7 @@
 namespace tcms;
 
 
-// helper class for storing labels:
+// obsolete, after refactoring to tokens and commands, todo: clean up.
 class Label {
     private $sName="";
     private $sContent="";

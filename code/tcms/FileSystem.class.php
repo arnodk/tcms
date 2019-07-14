@@ -1,15 +1,18 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: arno
- * Date: 10.06.2019
- * Time: 19:21
- */
-
 namespace tcms;
 
 use tcms\tools\Tools;
 
+/**
+ * Class FileSystem
+ * @package tcms
+ *
+ * handles all interactions of tcms with its persistence layer,
+ * for the moment it only deals with a filesystem, but the idea is to
+ * extend this to other storage methods as well, at which point this class will be refactored
+ * as a layer between tcms and the actually storage system.
+ *
+ */
 class FileSystem
 {
     private $context = NULL;
