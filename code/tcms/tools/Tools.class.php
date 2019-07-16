@@ -77,6 +77,12 @@ class Tools
                 // only allow a-zA-Z0-9
                 $m = preg_replace("/[^A-Za-z0-9]/", '', $sValue);
                 break;
+            case "filename":
+                // only allow a-zA-Z0-9 and white spaces
+                $m = preg_replace("/[^A-Za-z0-9\-\s\.]/", '', $sValue);
+                // remove ".."
+                $m = str_replace("..","",$m);
+                break;
             case "string":
             default:
                 $m = htmlspecialchars($sValue, ENT_QUOTES);

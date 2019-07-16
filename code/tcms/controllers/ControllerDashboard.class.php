@@ -25,14 +25,14 @@ class ControllerDashboard extends Controller
 
         switch ($sAction) {
             default:
-                if (VerifyToken::apiTokenCheck()) {
+                // on top level calls, no api check is necessary: if (VerifyToken::apiTokenCheck()) {
                     $page = new Page($this->context, Page::PAGE_ADMIN);
                     $page->load("dashboard");
                     $sToOutput = $page->run();
                     if (!empty($sToOutput)) {
                         $this->output->push($sToOutput);
                     }
-                }
+                // }
         }
     }
 }

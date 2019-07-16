@@ -1,1 +1,17 @@
- <input type="file" id="files" name="files[]" multiple />
+ <div class="card">
+    <div class="card-body">
+        Select one or more files:<br />
+        <br />
+        <input type="file" id="files" name="files[]" multiple class="" />
+     </div>
+ </div>
+
+ <div class="card">
+     <div class="card-body">
+         Progress: <br />
+         Uploaded <span id="uploadedSizeCaption">0</span> of <span id="totalSizeCaption">0</span> Bytes.<br />
+         <div class="progress">
+           <div id="upload-progress" class="progress-bar" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100"></div>
+         </div>
+      </div>
+  </div>

@@ -73,8 +73,20 @@ window.dashboardFireEvent = function(oLink) {
 
 window.dashboardUploadFile = function(evt) {
     var files = document.getElementById('files').files;
+
+    // prepare statistics:
+    var iTotalSize = 0;
+    var iTotalUploaded = 0;
     for (var j = 0; j <files.length; j++) {
         var blob = files[j];
+        iTotalSize = iTotalSize + blob.size;
+    }
+
+    document.getElementById('totalSizeCaption').innerHTML = iTotalSize;
+
+    for (var j = 0; j <files.length; j++) {
+        var blob = files[j];
+        console.log(blob);
         console.log('chunking');
         const BYTES_PER_CHUNK = 1024 * 1024;
         // 1MB chunk sizes.
@@ -82,19 +94,28 @@ window.dashboardUploadFile = function(evt) {
 
         var start = 0;
         var end = BYTES_PER_CHUNK;
+        var sName = blob.name;
 
         while (start < SIZE) {
-
 
             var chunk = blob.slice(start, end);
 
             var xhr = new XMLHttpRequest();
-            xhr.open('POST', tcms.apiUrl('asset','upload'), false);
+            xhr.open('POST', tcms.apiUrl('asset','upload','name=' + encodeURIComponent(sName) + '&size=' + SIZE + '&start=' + start), false);
             xhr.onload = function(e) {};
             xhr.send(blob);
 
+            iTotalUploaded = iTotalUploaded + (Math.min(end,SIZE) - start);
+
+            console.log('uploaded: ' + iTotalUploaded);
+            // update progress bar:
+            let iFraction = (iTotalUploaded / iTotalSize) * 100;
+            document.getElementById("upload-progress").style.width = iFraction + '%';
+            document.getElementById("uploadedSizeCaption").innerHTML = iTotalUploaded;
+
             start = end;
             end = start + BYTES_PER_CHUNK;
+
         }
     }
 }
