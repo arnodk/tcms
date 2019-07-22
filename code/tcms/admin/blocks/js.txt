@@ -85,10 +85,55 @@ class Tcms {
         oId.appendChild(card);
     }
 
+    addTagToEditor(sEditorId,sTag, sEndTag) {
+       let myField = document.getElementById(sEditorId);
+       if (typeof sEndTag === 'undefined') sEndTag = '';
+       if (myField.selectionStart || myField.selectionStart == '0') {
+            var startPos = myField.selectionStart;
+            var endPos = myField.selectionEnd;
+            var iLen = endPos - startPos;
+
+            console.log(startPos);
+            console.log(endPos);
+            console.log(iLen);
+            if (startPos === endPos) {
+                myField.value = myField.value.substr(0, startPos)
+                    + '['
+                    + sTag
+                    + ']'
+                    + '[/'
+                    + sEndTag
+                    + ']'
+                    + myField.value.substr(endPos);
+                myField.focus();
+                myField.setSelectionRange(startPos + sTag.length + 2,startPos + sTag.length + 2);
+            } else {
+                myField.value = myField.value.substr(0, startPos)
+                    + '['
+                    + sTag
+                    + ']'
+                    + myField.value.substr(startPos,endPos - startPos)
+                    + '[/'
+                    + sEndTag
+                    + ']'
+                    + myField.value.substr(endPos);
+                myField.focus();
+                myField.setSelectionRange(startPos + sTag.length + 2 + endPos - startPos, startPos + sTag.length + 2 + endPos - startPos);
+            }
+        } else {
+            myField.value += sTag + sEndTag;
+        }
+    }
+
     attachEditor(sId,sContent) {
         let oId = document.getElementById(sId);
         let sEditorId = sId + 'Editor';
-        oId.innerHTML = '<textarea id="'+sEditorId+'" class="tcmsEditor form-control">'+sContent+'</textarea>';
+        oId.innerHTML = '<div class="editor-button editor-button-b" id="editor-button-b"><i class="fas fa-bold"></i></div>'
+        oId.innerHTML = oId.innerHTML + '<textarea id="'+sEditorId+'" class="tcmsEditor form-control">'+sContent+'</textarea>';
+        let me = this;
+        document.getElementById("editor-button-b").addEventListener('click',function(event) {
+            me.addTagToEditor(sEditorId,'B','B')
+        });
     }
 
     addButton(sId,sButtonId,fOnClick,sCaption,sMode) {

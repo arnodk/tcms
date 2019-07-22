@@ -158,7 +158,7 @@ class Token {
     public function parse() {
         $aMatch = array();
         $i=0;
-        while(preg_match('/\[([^\]]+)\]/', $this->sContent, $aMatch, PREG_OFFSET_CAPTURE)) {
+        while(preg_match('/\[([^\]\s]+)\]/', $this->sContent, $aMatch, PREG_OFFSET_CAPTURE)) {
             if (!empty($aMatch) && is_array($aMatch) && count($aMatch) >= 2) {
                 $bClosingTagFound = false;
 
