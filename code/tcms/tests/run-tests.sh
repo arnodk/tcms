@@ -1,2 +1,2 @@
-../../../vendor/bin/phpunit --bootstrap ../../../vendor/autoload.php StartupTest
+../../../vendor/bin/phpunit --bootstrap ../../../vendor/autoload.php *Test.php
 

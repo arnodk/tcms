@@ -19,11 +19,13 @@ class ControllerPage extends Controller
         parent::__construct();
     }
 
-    public function run($sAction="view") {
+    public function run($sAction="view",$aOptions = false) {
         if (empty($sAction)) $sAction="view";
         switch($sAction) {
             case "view":
-                $sToOutput=$this->view();
+                $sPage = false;
+                if (is_array($aOptions) && !empty($aOptions['page'])) $sPage = $aOptions['page'];
+                $sToOutput=$this->view($sPage);
                 if (!empty($sToOutput)) {
                     $this->output->push($sToOutput);
                 }
@@ -117,9 +119,9 @@ class ControllerPage extends Controller
      *
      * @return string
      */
-    private function view() {
+    private function view($sPage = false) {
         // which page are we on?
-        $sPage = $this->router->determinePage();
+        if (empty($sPage)) $sPage = $this->router->determinePage();
         $page = new Page($this->context);
         $page->load($sPage);
 

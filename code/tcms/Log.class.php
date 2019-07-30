@@ -38,6 +38,6 @@ class Log
         $sPutToFile.="\t\t".$sRemoteAddr."\t\t".$sMessage."\n";
 
         $fs = new FileSystem($this->context);
-        $fs->append("log","log",$sPutToFile);
+        return $fs->append("log","log",$sPutToFile);
     }
 }
