@@ -39,8 +39,17 @@ class StartupTest extends TestCase
     }
 
     public function testLog() {
+        $sLogMessage = "LOG TEST";
         $context = new \tcms\Context();
         $log = new Log($context);
-        $this->assertGreaterThan(8, intval($log->add("LOG TEST",Log::TYPE_INFO)));
+        $this->assertGreaterThan(strlen($sLogMessage), intval($log->add($sLogMessage,Log::TYPE_INFO)));
+        $fs = new \tcms\FileSystem($context);
+        $sLog = $fs->load("log","log");
+        $aLines = explode("\n",$sLog);
+        // we end a log line with "\n", which implies that the last element of the array is empty...
+        // so, for the last log line, we need to take the 2nd last:
+        $sLastLine = $aLines[count($aLines) - 2];
+        $sLastLine = trim($sLastLine);
+        $this->assertEquals($sLogMessage,substr($sLastLine,strlen($sLastLine) - strlen($sLogMessage)));
     }
 }

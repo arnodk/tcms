@@ -22,6 +22,6 @@ class Context
     {
         $this->config = new Config();
         $this->vars = new Variables();
-        $this->log = new Log($this);
+        $this->log = new Log($this);    // caution: circular reference...
     }
 }
