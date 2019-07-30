@@ -6,3 +6,4 @@ todo/*
 public/assets/*
 public/thirdparty/*
 public/css/*
+vendor/*
