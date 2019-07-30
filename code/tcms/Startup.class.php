@@ -5,6 +5,8 @@ namespace tcms;
 use tcms\controllers\Controller;
 use tcms\tools\Tools;
 
+require __DIR__ . '/../../vendor/autoload.php';
+require_once("Output.class.php");
 require_once("Config.class.php");
 require_once("VerifyToken.class.php");
 require_once("tools/Tools.class.php");

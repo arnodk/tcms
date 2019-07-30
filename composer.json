@@ -1,0 +1,8 @@
+{
+    "require": {
+        "symfony/browser-kit": "^4.3"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "^8"
+    }
+}
