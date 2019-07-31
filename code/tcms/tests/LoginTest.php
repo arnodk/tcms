@@ -20,5 +20,6 @@ class LoginTest extends TestCase
         $context = new Context();
         $login = new Login($context);
         $this->assertEquals(true,$login->loadForUser('root'), 'expected root user, but no root user found');
+        $this->assertEquals(true,$login->inGroups("admin"), 'expected root to be assigned to admin group');
     }
 }

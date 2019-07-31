@@ -1,5 +1,7 @@
 <?php
 namespace tcms;
+use Symfony\Component\Yaml\Exception\ParseException;
+use Symfony\Component\Yaml\Yaml;
 
 class Config {
     public const FRIENDLY_URL_MODE_PARAM    = 1;
@@ -9,12 +11,24 @@ class Config {
     public const DEBUG_LEVEL_QA             = 1;
     public const DEBUG_LEVEL_DEV            = 3;
 
+    private $aConfig = array();
+
+    public function __construct()
+    {
+        $this->loadConfigFile();
+    }
+
     public function getBaseFileSystemPath() {
         return __DIR__ . "/../..";
     }
 
     public function getBaseURL() {
-        return ".";
+        if (isset($_SERVER['SERVER_PROTOCOL'])) {
+            return (stripos($_SERVER['SERVER_PROTOCOL'], 'https') === 0 ? 'https://' : 'http://') . $_SERVER['SERVER_NAME'] . dirname($_SERVER['SCRIPT_NAME']);
+        } else {
+            // cli call:
+            return $this->getFromSetup('general','cli-host');
+        }
     }
 
     public function getURLMode() {
@@ -27,6 +41,33 @@ class Config {
 
     public function getStaticSalt() {
         // TODO: use dynamic salts
-        return file_get_contents(__DIR__ . '/../../config/salt.txt');
+        return $this->getFromSetup('general','salt');
+    }
+
+    public function getTestUser() {
+        return $this->getFromSetup('tests','dashboard-test-login');
+    }
+
+    public function getTestPassword() {
+        return $this->getFromSetup('tests','dashboard-test-password');
+    }
+
+    public function getFromSetup($sCategory, $sItem) {
+        if (isset($this->aConfig[$sCategory]) && isset($this->aConfig[$sCategory][$sItem])) return $this->aConfig[$sCategory][$sItem];
+        return false;
+    }
+
+    public function loadConfigFile() {
+        // we can't use the filesystem class here, as it needs a fully booted up instance of a config class itself.
+        // so, do this the old way:
+        $sContent = file_get_contents(__DIR__."/../../config/setup.yaml");
+        try {
+            if (empty($sContent)) throw new \Exception('empty or invalid setup file');
+            $this->aConfig = Yaml::parse($sContent);
+        } catch (\Exception $e) {
+            // TODO: an error handle more reasonable than just nope-ing out.
+            echo "Setup could not be parsed.";
+            die();
+        }
     }
 }

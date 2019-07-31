@@ -56,6 +56,9 @@ class FileSystem
             case "asset":
                 $sContentDir = "/public/assets";
                 break;
+            case "config":
+                $sContentDir = "/config";
+                break;
             case "log":
                 // logs is one dir up from content's perspective:
                 $sContentDir = "/logs";
@@ -86,6 +89,9 @@ class FileSystem
             case "log":
             case "user":
                 $sExtension="txt";
+                break;
+            case "config":
+                $sExtension="yaml";
                 break;
             case "asset":
                 // check for allowed extension on the filename itself:

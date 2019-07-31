@@ -23,6 +23,7 @@ class ControllerLogin extends Controller
         switch($sAction) {
             case 'login':
                 $bStatus = false;
+                $sReason = "";
                 if (VerifyToken::apiTokenCheck()) {
                     $aData = Tools::jsonPost();
                     // sanity checks
@@ -32,11 +33,18 @@ class ControllerLogin extends Controller
                         if ($login->pw($aData['password'])) {
                             $login->attachToSession();
                             $bStatus = true;
+                        } else {
+                            $sReason="invalid credentials";
                         }
                     }
+                } else {
+                    $sReason = "invalid session";
                 }
                 // return status
                 $a = array("status"=>($bStatus)?'OK':'ERROR');
+                if (!empty($sReason)) {
+                    $a['reason'] = $sReason;
+                }
                 $this->output->json($a);
                 break;
             default:
