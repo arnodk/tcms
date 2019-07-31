@@ -20,14 +20,16 @@ class PageTest extends TestCase
     }
 
     public function testHomepage() {
-
         $page = new \tcms\controllers\ControllerPage();
         ob_start();
         $page->run('view',['page'=>'start']);
         $sResult = ob_get_contents();
         ob_end_clean();
-        $this->assertStringContainsString('<html>',$sResult);
-        $this->assertStringContainsString('</html>',$sResult);
+        $this->assertStringContainsString('<head>',$sResult, 'expected head tag');
+        $this->assertStringContainsString('</head>',$sResult, 'expected head closing tag');
+        $this->assertStringContainsString('<body>',$sResult, 'expected body tag');
+        $this->assertStringContainsString('</body>',$sResult, 'expected body closing tag');
+        $this->assertStringContainsString('</html>',$sResult, 'expected html closing tag');
     }
 
 

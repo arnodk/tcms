@@ -51,6 +51,8 @@ class Login {
     private function populateFromJson($sJson) {
         $this->init();
         $a = json_decode($sJson,true);
+        if (is_null($a)) return false;
+        if (!is_array($a)) return false;
 
         if (!empty($a['user'])) {
             $this->sUser=$a['user'];
@@ -59,14 +61,17 @@ class Login {
             $this->sHash=$a['hash'];
         }
         if (!empty($a['groups'])) $this->aGroups = explode(",",$a['groups']);
+
+        return true;
     }
 
     public function loadForUser($s) {
         $fs = new FileSystem($this->context);
         $sUserJson=$fs->load('user',$s);
         if (!empty($sUserJson)) {
-            $this->populateFromJson($sUserJson);
+            return $this->populateFromJson($sUserJson);
         }
+        return false;
     }
 
     public function pw($s) {

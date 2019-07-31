@@ -1,10 +1,4 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: arno
- * Date: 30.07.2019
- * Time: 11:38
- */
 
 use PHPUnit\Framework\TestCase;
 use tcms\Log;

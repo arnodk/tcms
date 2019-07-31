@@ -27,6 +27,6 @@ class Config {
 
     public function getStaticSalt() {
         // TODO: use dynamic salts
-        return ".!..at";
+        return file_get_contents(__DIR__ . '/../../config/salt.txt');
     }
 }
