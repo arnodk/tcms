@@ -38,6 +38,11 @@ var sAction = '';
 window.dashboardFireEvent = function(oLink) {
     sSystem = oLink.getAttribute('data-system');
     sAction = oLink.getAttribute('data-action');
+
+    window.dashboardController(sSystem, sAction);
+}
+
+window.dashboardController = function(sSystem,sAction) {
     tcms.apiCall(sSystem,sAction,{},function(result) {
         let oId = document.getElementById('content');
         oId.innerHTML = '';
@@ -162,6 +167,7 @@ window.savePage = function() {
             oId.innerHTML = '';
             if (result.status==='OK') {
                 alert('content saved');
+                window.dashboardController('page','list');
             }
     });
 }

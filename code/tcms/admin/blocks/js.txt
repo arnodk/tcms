@@ -129,10 +129,18 @@ class Tcms {
         let oId = document.getElementById(sId);
         let sEditorId = sId + 'Editor';
         oId.innerHTML = '<div class="editor-button editor-button-b" id="editor-button-b"><i class="fas fa-bold"></i></div>'
+        oId.innerHTML = oId.innerHTML +  '<div class="editor-button editor-button-i" id="editor-button-i"><i class="fas fa-italic"></i></div>'
+        oId.innerHTML = oId.innerHTML +  '<div class="editor-button editor-button-h" id="editor-button-h"><i class="fas fa-heading"></i></div>'
         oId.innerHTML = oId.innerHTML + '<textarea id="'+sEditorId+'" class="tcmsEditor form-control">'+sContent+'</textarea>';
         let me = this;
         document.getElementById("editor-button-b").addEventListener('click',function(event) {
             me.addTagToEditor(sEditorId,'B','B')
+        });
+        document.getElementById("editor-button-i").addEventListener('click',function(event) {
+            me.addTagToEditor(sEditorId,'I','I')
+        });
+        document.getElementById("editor-button-h").addEventListener('click',function(event) {
+            me.addTagToEditor(sEditorId,'header','header')
         });
     }
 
