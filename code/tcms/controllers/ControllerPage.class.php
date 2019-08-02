@@ -39,6 +39,9 @@ class ControllerPage extends Controller
             case "save":
                 $this->output->json($this->save());
                 break;
+            case "delete":
+                $this->output->json($this->delete());
+                break;
             case "list":
                 $this->output->json($this->list());
                 break;
@@ -63,6 +66,27 @@ class ControllerPage extends Controller
                 $page->setContent($sContent);
                 $page->setName($sPage);
                 if ($page->save()) {
+                    $aResult['status'] = "OK";
+                }
+            }
+        }
+        return $aResult;
+    }
+
+    /**
+     * delete page with the name supplied in a jsonPost.
+     *
+     * @return array
+     */
+    private function delete() {
+        $aResult = array();
+        if (VerifyToken::apiTokenCheck() && Login::hasGroup("admin")) {
+            $aParam = Tools::jsonPost();
+            $sPage = $aParam['page'];
+            if (!empty($sPage)) {
+                $page = new Page($this->context);
+                $page->setName($sPage);
+                if ($page->delete()) {
                     $aResult['status'] = "OK";
                 }
             }

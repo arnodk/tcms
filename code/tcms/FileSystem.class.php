@@ -131,6 +131,7 @@ class FileSystem
     public function load($sCategory, $sFileName) {
 
         $sFullPath = $this->getFullPath($sCategory,$sFileName);
+        if (empty($sFullPath)) return "";
 
         if (!file_exists($sFullPath)) {
             $this->context->log->add("Could not load file [".$sFullPath."] for category [".$sCategory."] and file name [".$sFileName."]",Log::TYPE_ERROR);
@@ -142,14 +143,37 @@ class FileSystem
 
     public function save($sCategory, $sName, $sData) {
         $sFullPath = $this->getFullPath($sCategory,$sName);
+        if (empty($sFullPath)) {
+            $this->context->log->add("Could not save file [".$sName."] for category [".$sCategory."], because its path could not be determined",Log::TYPE_ERROR);
+            return false;
+        }
 
         return file_put_contents($sFullPath,$sData);
     }
 
     public function append($sCategory,$sFileName,$sData) {
         $sFullPath = $this->getFullPath($sCategory,$sFileName);
+        if (empty($sFullPath)) {
+            $this->context->log->add("Could not append file [".$sFileName."] for category [".$sCategory."], because its path could not be determined",Log::TYPE_ERROR);
+            return false;
+        }
 
         return file_put_contents($sFullPath,$sData,FILE_APPEND);
+    }
+
+    public function delete($sCategory, $sName) {
+        $sFullPath = $this->getFullPath($sCategory,$sName);
+        if (empty($sFullPath)) {
+            $this->context->log->add("Could not delete file [".$sName."] for category [".$sCategory."], because its path could not be determined",Log::TYPE_ERROR);
+            return false;
+        }
+
+        if (!file_exists($sFullPath)) {
+            $this->context->log->add("Could not delete file [".$sFullPath."] for category [".$sCategory."] and file name [".$sName."], because the file did not exist.",Log::TYPE_ERROR);
+            return false;
+        }
+
+        return unlink($sFullPath);
     }
 
     public function bExists($sCategory,$sFileName) {

@@ -89,6 +89,24 @@ class Block
         return $fs->save('block',$this->getName(),$this->getContent());
     }
 
+    public function delete() {
+        $this->context->log->add("Deleting block: ".$this->getName(),Log::TYPE_INFO);
+
+        if (empty($this->getName())) {
+            $this->context->log->add("Delete block called with an empty block name",Log::TYPE_ERROR);
+            return false;
+        }
+
+        // we only delete content blocks, so no category determination necessary:
+        $fs = new FileSystem($this->context);
+        if (!$fs->bExists('block',$this->getName())) {
+            $this->context->log->add("Could not find block name: " .$this->getName(),Log::TYPE_ERROR);
+            return false;
+        }
+
+        return $fs->delete('block',$this->getName());
+    }
+
     public function load($sBlock) {
         $this->context->log->add("Loading block with name: ".$sBlock,Log::TYPE_INFO);
         if (empty($sBlock)) {

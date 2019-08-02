@@ -40,6 +40,9 @@ class ControllerBlock extends Controller
             case "save":
                 $this->output->json($this->save());
                 break;
+            case "delete":
+                $this->output->json($this->delete());
+                break;
             case "list":
                 $this->output->json($this->list());
                 break;
@@ -64,6 +67,27 @@ class ControllerBlock extends Controller
                 $block->setContent($sContent);
                 $block->setName($sBlock);
                 if ($block->save()) {
+                    $aResult['status'] = "OK";
+                }
+            }
+        }
+        return $aResult;
+    }
+
+    /**
+     * delete block with the name supplied in a jsonPost.
+     *
+     * @return array
+     */
+    private function delete() {
+        $aResult = array();
+        if (VerifyToken::apiTokenCheck() && Login::hasGroup("admin")) {
+            $aParam = Tools::jsonPost();
+            $sBlock = $aParam['block'];
+            if (!empty($sBlock)) {
+                $block = new Block($this->context);
+                $block->setName($sBlock);
+                if ($block->delete()) {
                     $aResult['status'] = "OK";
                 }
             }

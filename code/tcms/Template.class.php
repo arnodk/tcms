@@ -51,6 +51,24 @@ class Template
         return $fs->save('template',$this->getName(),$this->getContent());
     }
 
+    public function delete() {
+        $this->context->log->add("Deleting template: ".$this->getName(),Log::TYPE_INFO);
+
+        if (empty($this->getName())) {
+            $this->context->log->add("Delete template called with an empty template name",Log::TYPE_ERROR);
+            return false;
+        }
+
+        // we only delete content blocks, so no category determination necessary:
+        $fs = new FileSystem($this->context);
+        if (!$fs->bExists('template',$this->getName())) {
+            $this->context->log->add("Could not find template name: " .$this->getName(),Log::TYPE_ERROR);
+            return false;
+        }
+
+        return $fs->delete('template',$this->getName());
+    }
+
     public function load($iTemplateType=self::TEMPLATE_CONTENT) {
         $this->context->log->add("Loading template with name: ".$this->getName(),Log::TYPE_INFO);
         if (empty($this->getName())) {

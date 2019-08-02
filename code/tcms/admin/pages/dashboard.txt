@@ -60,7 +60,9 @@ window.dashboardController = function(sSystem,sAction) {
                 if (Array.isArray(items)) {
                     items.forEach(function(item) {
                         tcms.addCard('content',item.name,'...',item.summary,'\
-                            <a href="javascript://" onclick="dashboardEditPage(this)" data-name="'+item.nameSafe+'" class="card-link">edit</a>\
+                            <a href="javascript://" onclick="dashboardEditPage(this)" data-name="'+item.nameSafe+'" class="card-link btn btn-sm btn-primary">edit</a>\
+                            \
+                            <a href="javascript://" onclick="dashboardDeletePage(this)" data-name="'+item.nameSafe+'" class="card-link btn btn-sm btn-danger">delete</a>\
                         ');
                     });
                 }
@@ -76,7 +78,9 @@ window.dashboardController = function(sSystem,sAction) {
                  if (Array.isArray(items)) {
                     items.forEach(function(item) {
                         tcms.addCard('content',item.name,'...',item.summary,'\
-                            <a href="javascript://" onclick="dashboardEditBlock(this)" data-name="'+item.nameSafe+'" class="card-link">edit</a>\
+                            <a href="javascript://" onclick="dashboardEditBlock(this)" data-name="'+item.nameSafe+'" class="card-link btn btn-sm btn-primary">edit</a>\
+                            \
+                            <a href="javascript://" onclick="dashboardDeleteBlock(this)" data-name="'+item.nameSafe+'" class="card-link btn btn-sm btn-danger">delete</a>\
                         ');
                     });
                  }
@@ -84,7 +88,7 @@ window.dashboardController = function(sSystem,sAction) {
                  tcms.addButton('content','btnAddTemplate',function() {
                     var sTemplateName = prompt('Template name:');
                     if (sTemplateName!=null && sTemplateName!="") {
-                        window.dashboardAddBlock(tcms.escape(sTemplateName));
+                        window.dashboardAddTemplate(tcms.escape(sTemplateName));
                     }
                  },'add template','primary');
 
@@ -92,7 +96,9 @@ window.dashboardController = function(sSystem,sAction) {
                  if (Array.isArray(items)) {
                     items.forEach(function(item) {
                         tcms.addCard('content',item.name,'...',item.summary,'\
-                            <a href="javascript://" onclick="dashboardEditTemplate(this)" data-name="'+item.nameSafe+'" class="card-link">edit</a>\
+                            <a href="javascript://" onclick="dashboardEditTemplate(this)" data-name="'+item.nameSafe+'" class="card-link btn btn-sm btn-primary">edit</a>\
+                            \
+                            <a href="javascript://" onclick="dashboardDeleteTemplate(this)" data-name="'+item.nameSafe+'" class="card-link btn btn-sm btn-danger">delete</a>\
                         ');
                     });
                  }
@@ -177,6 +183,22 @@ window.dashboardEditPage = function(link) {
     });
 }
 
+window.dashboardDeletePage = function(link) {
+    var sName = link.getAttribute('data-name');
+    if (confirm('Are you sure you want to delete page "' + sName + '"?')) {
+        tcms.apiCall('page','delete',{
+                     'page':sName
+        },function(result) {
+                    var oId = document.getElementById('content');
+                    oId.innerHTML = '';
+                    if (result.status==='OK') {
+                        alert('page deleted');
+                        window.dashboardController('page','list');
+                    }
+        });
+    }
+}
+
 window.dashboardEditBlock = function(link) {
     var sName = link.getAttribute('data-name');
 
@@ -195,6 +217,22 @@ window.dashboardEditBlock = function(link) {
     });
 }
 
+window.dashboardDeleteBlock = function(link) {
+    var sName = link.getAttribute('data-name');
+    if (confirm('Are you sure you want to delete block "' + sName + '"?')) {
+        tcms.apiCall('block','delete',{
+                     'block':sName
+        },function(result) {
+                    var oId = document.getElementById('content');
+                    oId.innerHTML = '';
+                    if (result.status==='OK') {
+                        alert('block deleted');
+                        window.dashboardController('block','list');
+                    }
+        });
+    }
+}
+
 window.dashboardEditTemplate = function(link) {
     var sName = link.getAttribute('data-name');
 
@@ -211,6 +249,22 @@ window.dashboardEditTemplate = function(link) {
                 }
             }
     });
+}
+
+window.dashboardDeleteTemplate = function(link) {
+    var sName = link.getAttribute('data-name');
+    if (confirm('Are you sure you want to delete template "' + sName + '"?')) {
+        tcms.apiCall('template','delete',{
+                     'template':sName
+        },function(result) {
+                    var oId = document.getElementById('content');
+                    oId.innerHTML = '';
+                    if (result.status==='OK') {
+                        alert('template deleted');
+                        window.dashboardController('template','list');
+                    }
+        });
+    }
 }
 
 window.dashboardAddPage = function(sName) {
@@ -278,6 +332,14 @@ window.dashboardAddBlock = function(sName) {
     tcms.attachEditor('content', '');
     tcms.getEditor('content').setAttribute('data-block-name',sName);
     tcms.addButton('content','btnSaveBlock',window.saveBlock,'save','primary');
+}
+
+window.dashboardAddTemplate = function(sName) {
+    document.getElementById('content').innerHTML = '';
+
+    tcms.attachEditor('content', '');
+    tcms.getEditor('content').setAttribute('data-template-name',sName);
+    tcms.addButton('content','btnSaveTemplate',window.saveTemplate,'save','primary');
 }
 [/section]
 

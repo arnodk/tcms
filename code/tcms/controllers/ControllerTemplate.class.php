@@ -41,12 +41,13 @@ class ControllerTemplate extends Controller
             case "save":
                 $this->output->json($this->save());
                 break;
+            case "delete":
+                $this->output->json($this->delete());
+                break;
             case "list":
                 $this->output->json($this->list());
                 break;
         }
-
-
     }
 
     /**
@@ -65,6 +66,27 @@ class ControllerTemplate extends Controller
                 $template->setContent($sContent);
                 $template->setName($sTemplate);
                 if ($template->save()) {
+                    $aResult['status'] = "OK";
+                }
+            }
+        }
+        return $aResult;
+    }
+
+    /**
+     * delete block with the name supplied in a jsonPost.
+     *
+     * @return array
+     */
+    private function delete() {
+        $aResult = array();
+        if (VerifyToken::apiTokenCheck() && Login::hasGroup("admin")) {
+            $aParam = Tools::jsonPost();
+            $sTemplate = $aParam['template'];
+            if (!empty($sTemplate)) {
+                $template = new Template($this->context);
+                $template->setName($sTemplate);
+                if ($template->delete()) {
                     $aResult['status'] = "OK";
                 }
             }

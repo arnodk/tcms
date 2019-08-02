@@ -169,6 +169,25 @@ class Page
         return $fs->save('page',$this->getName(),$this->getContent());
     }
 
+    public function delete() {
+        $this->context->log->add("Deleting page: ".$this->getName(),Log::TYPE_INFO);
+
+        if (empty($this->getName())) {
+            $this->context->log->add("Delete page called with an empty page name",Log::TYPE_ERROR);
+            return false;
+        }
+
+        // we only delete content pages, so no category determination necessary:
+        $fs = new FileSystem($this->context);
+        if (!$fs->bExists('page',$this->getName())) {
+            $this->context->log->add("Could not find page name: " .$this->getName(),Log::TYPE_ERROR);
+            return false;
+        }
+
+        return $fs->delete('page',$this->getName());
+
+    }
+
     public function list() {
 
         // run through all the pages, and retrieve basic info about them::
