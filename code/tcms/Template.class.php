@@ -40,7 +40,24 @@ class Template
         return $this->sName;
     }
 
+    public function save() {
+        $this->context->log->add("Saving template: ".$this->getName(),Log::TYPE_INFO);
+        if (empty($this->getName())) {
+            $this->context->log->add("Save template called with an empty page name",Log::TYPE_ERROR);
+            return false;
+        }
+        $fs = new FileSystem($this->context);
+
+        return $fs->save('template',$this->getName(),$this->getContent());
+    }
+
     public function load($iTemplateType=self::TEMPLATE_CONTENT) {
+        $this->context->log->add("Loading template with name: ".$this->getName(),Log::TYPE_INFO);
+        if (empty($this->getName())) {
+            $this->context->log->add("Load template called with an empty page name",Log::TYPE_INFO);
+            return false;
+        }
+
         if ($iTemplateType==self::TEMPLATE_CONTENT) {
             $sCategory = "template";
         } elseif ($iTemplateType==self::TEMPLATE_ADMIN) {
@@ -49,12 +66,16 @@ class Template
 
         if (!empty($sCategory)) {
             // load and parse the page:
-            $token = Parser::parse($this->fs->load($sCategory,$this->sName));
+            $this->setContent($this->fs->load($sCategory,$this->sName));
+            $token = Parser::parse($this->sContent);
             if (!empty($token)) {
                 // render the parsed content:
                 $this->setToken($token);
             }
+            return true;
         }
+
+        return false;
     }
 
     public function render() {
@@ -75,4 +96,29 @@ class Template
         }
     }
 
+    public function getContent() {
+        return $this->sContent;
+    }
+
+    public function setContent($s) {
+        $this->sContent = $s;
+    }
+
+    public function list() {
+
+        // run through all the pages, and retrieve basic info about them::
+        $fs = new FileSystem($this->context);
+        $aResult = array();
+        foreach($fs->list('template') as $sFilename) {
+            // assume we are not listing admin pages:
+            $sSummary = trim(htmlspecialchars(Token::removeTokens($this->fs->load('template', $sFilename))));
+            $aPage = array(
+                "name"          => $sFilename,
+                "nameSafe"      => htmlspecialchars($sFilename,ENT_QUOTES),
+                "summary"       => $sSummary
+            );
+            $aResult[] = $aPage;
+        }
+        return $aResult;
+    }
 }

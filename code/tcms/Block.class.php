@@ -111,7 +111,7 @@ class Block
         $aResult = array();
         foreach($fs->list('block') as $sFilename) {
             // assume we are not listing admin pages:
-            $sSummary = trim(Token::removeTokens($this->fs->load('block', $sFilename)));
+            $sSummary = trim(htmlspecialchars(Token::removeTokens($this->fs->load('block', $sFilename))));
             $aPage = array(
                 "name"          => $sFilename,
                 "nameSafe"      => htmlspecialchars($sFilename,ENT_QUOTES),

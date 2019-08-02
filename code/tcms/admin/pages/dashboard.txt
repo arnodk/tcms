@@ -6,7 +6,7 @@
             <ul>
                 <li onclick="dashboardFireEvent(this)" class="dashboard-menu-item" data-system="page" data-action="list"><i class="fas fa-file-alt"></i>Pages</li>
                 <li onclick="dashboardFireEvent(this)" class="dashboard-menu-item" data-system="block" data-action="list"><i class="fas fa-box"></i>Blocks</li>
-                <li onclick="dashboardFireEvent(this)" class="dashboard-menu-item" data-system="templates" data-action="list"><i class="fas fa-file-code"></i>Templates</li>
+                <li onclick="dashboardFireEvent(this)" class="dashboard-menu-item" data-system="template" data-action="list"><i class="fas fa-file-code"></i>Templates</li>
                 <li onclick="dashboardFireEvent(this)" class="dashboard-menu-item" data-system="asset" data-action="list"><i class="fas fa-file"></i>Assets</li>
                 <li onclick="dashboardFireEvent(this)" class="dashboard-menu-item" data-system="log" data-action="list"><i class="fas fa-server"></i>Logs</li>
                 <li onclick="dashboardFireEvent(this)" class="dashboard-menu-item" data-system="login" data-action="list"><i class="fas fa-user"></i>Users</li>
@@ -77,6 +77,22 @@ window.dashboardController = function(sSystem,sAction) {
                     items.forEach(function(item) {
                         tcms.addCard('content',item.name,'...',item.summary,'\
                             <a href="javascript://" onclick="dashboardEditBlock(this)" data-name="'+item.nameSafe+'" class="card-link">edit</a>\
+                        ');
+                    });
+                 }
+            } else if (sSystem==='template') {
+                 tcms.addButton('content','btnAddTemplate',function() {
+                    var sTemplateName = prompt('Template name:');
+                    if (sTemplateName!=null && sTemplateName!="") {
+                        window.dashboardAddBlock(tcms.escape(sTemplateName));
+                    }
+                 },'add template','primary');
+
+                 let items = result.templates;
+                 if (Array.isArray(items)) {
+                    items.forEach(function(item) {
+                        tcms.addCard('content',item.name,'...',item.summary,'\
+                            <a href="javascript://" onclick="dashboardEditTemplate(this)" data-name="'+item.nameSafe+'" class="card-link">edit</a>\
                         ');
                     });
                  }
@@ -179,6 +195,24 @@ window.dashboardEditBlock = function(link) {
     });
 }
 
+window.dashboardEditTemplate = function(link) {
+    var sName = link.getAttribute('data-name');
+
+    tcms.apiCall('template','edit',{
+             'template':sName
+    },function(result) {
+            var oId = document.getElementById('content');
+            oId.innerHTML = '';
+            if (result.status==='OK') {
+                if (typeof result.content != 'undefined') {
+                    tcms.attachEditor('content', result.content);
+                    tcms.getEditor('content').setAttribute('data-template-name',sName);
+                    tcms.addButton('content','btnSaveTemplate',window.saveTemplate,'save','primary');
+                }
+            }
+    });
+}
+
 window.dashboardAddPage = function(sName) {
     document.getElementById('content').innerHTML = '';
 
@@ -217,6 +251,23 @@ window.saveBlock = function() {
             if (result.status==='OK') {
                 alert('content saved');
                 window.dashboardController('block','list');
+            }
+    });
+}
+
+window.saveTemplate = function() {
+    var sContent = tcms.getEditor('content').value;
+    var sName = tcms.getEditor('content').getAttribute('data-template-name')
+
+    tcms.apiCall('template','save',{
+             'template':sName,
+             'content':sContent
+    },function(result) {
+            var oId = document.getElementById('content');
+            oId.innerHTML = '';
+            if (result.status==='OK') {
+                alert('content saved');
+                window.dashboardController('template','list');
             }
     });
 }

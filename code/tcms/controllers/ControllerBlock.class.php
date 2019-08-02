@@ -103,15 +103,19 @@ class ControllerBlock extends Controller
      */
     private function add() {
         $aResult = array();
+
         if (VerifyToken::apiTokenCheck() && Login::hasGroup("admin")) {
+            // TODO: check if this name does not already exist, and if not, use some kind of locking mechanism to reserve it for this user.
+
             $aParam = Tools::jsonPost();
-            $sPage = $aParam['page'];
+            $sBlock = $aParam['block'];
 
             $aResult['status'] = "OK";
-            $aResult['name'] = $sPage;
+            $aResult['name'] = $sBlock;
             $aResult['content'] = '';
             $aResult['html'] = '';
         }
+
         return $aResult;
     }
 

@@ -176,7 +176,7 @@ class Page
         $aResult = array();
         foreach($fs->list('page') as $sFilename) {
             // assume we are not listing admin pages:
-            $sSummary = trim(Token::removeTokens($this->fs->load('page', $sFilename)));
+            $sSummary = trim(htmlspecialchars(Token::removeTokens($this->fs->load('page', $sFilename))));
             $aPage = array(
                 "name"          => $sFilename,
                 "nameSafe"      => htmlspecialchars($sFilename,ENT_QUOTES),

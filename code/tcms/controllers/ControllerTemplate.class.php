@@ -1,18 +1,20 @@
 <?php
 namespace tcms\controllers;
 
+use tcms\Block;
 use tcms\Login;
 use tcms\Page;
+use tcms\Template;
 use tcms\tools\Tools;
 use tcms\VerifyToken;
 
 /**
- * Class ControllerPage
- * responsible for displaying and editing of "normal" tcms pages found in content/pages directory.
+ * Class ControllerTemplate
+ * responsible for displaying and editing of blocks found in content/templates directory.
  *
  * @package tcms\controllers
  */
-class ControllerPage extends Controller
+class ControllerTemplate extends Controller
 {
     public function __construct()
     {
@@ -23,9 +25,9 @@ class ControllerPage extends Controller
         if (empty($sAction)) $sAction="view";
         switch($sAction) {
             case "view":
-                $sPage = false;
-                if (is_array($aOptions) && !empty($aOptions['page'])) $sPage = $aOptions['page'];
-                $sToOutput=$this->view($sPage);
+                $sBlock = false;
+                if (is_array($aOptions) && !empty($aOptions['block'])) $sBlock = $aOptions['block'];
+                $sToOutput=$this->view($sBlock);
                 if (!empty($sToOutput)) {
                     $this->output->push($sToOutput);
                 }
@@ -48,7 +50,7 @@ class ControllerPage extends Controller
     }
 
     /**
-     * takes a posted page, saves it and returns a json object with 'status'=>'OK' when successful.
+     * takes a posted template, saves it and returns a json object with 'status'=>'OK' when successful.
      *
      * @return array
      */
@@ -56,13 +58,13 @@ class ControllerPage extends Controller
         $aResult = array();
         if (VerifyToken::apiTokenCheck() && Login::hasGroup("admin")) {
             $aParam = Tools::jsonPost();
-            $sPage = $aParam['page'];
+            $sTemplate = $aParam['template'];
             $sContent = $aParam['content'];
-            if (!empty($sPage)) {
-                $page = new Page($this->context);
-                $page->setContent($sContent);
-                $page->setName($sPage);
-                if ($page->save()) {
+            if (!empty($sTemplate)) {
+                $template = new Template($this->context);
+                $template->setContent($sContent);
+                $template->setName($sTemplate);
+                if ($template->save()) {
                     $aResult['status'] = "OK";
                 }
             }
@@ -71,7 +73,7 @@ class ControllerPage extends Controller
     }
 
     /**
-     * takes a posted page name, and, if found, returns a json object with page info and content.
+     * takes a posted template name, and, if found, returns a json object with page info and content.
      * an empty json object is returned, if the page could not be returned
      *
      * @return array
@@ -80,14 +82,15 @@ class ControllerPage extends Controller
         $aResult = array();
         if (VerifyToken::apiTokenCheck() && Login::hasGroup("admin")) {
             $aParam = Tools::jsonPost();
-            $sPage = $aParam['page'];
-            if (!empty($sPage)) {
-                $page = new Page($this->context);
-                if ($page->load($sPage)) {
+            $sTemplate = $aParam['template'];
+            if (!empty($sTemplate)) {
+                $template = new Template($this->context);
+                $template->setName($sTemplate);
+                if ($template->load()) {
                     $aResult['status'] = "OK";
-                    $aResult['name'] = $sPage;
-                    $aResult['content'] = $page->getContent();
-                    $aResult['html'] = $page->getHtml();
+                    $aResult['name'] = $sTemplate;
+                    $aResult['content'] = $template->getContent();
+                    $aResult['html'] = $template->getContent();
                 }
             }
         }
@@ -103,30 +106,19 @@ class ControllerPage extends Controller
     private function add() {
         $aResult = array();
         if (VerifyToken::apiTokenCheck() && Login::hasGroup("admin")) {
+            // TODO: check if this name does not already exist, and if not, use some kind of locking mechanism to reserve it for this user.
+
             $aParam = Tools::jsonPost();
-            $sPage = $aParam['page'];
+            $sTemplate = $aParam['template'];
 
             $aResult['status'] = "OK";
-            $aResult['name'] = $sPage;
+            $aResult['name'] = $sTemplate;
             $aResult['content'] = '';
             $aResult['html'] = '';
         }
         return $aResult;
     }
 
-    /**
-     * calls the router to figure out which page is being requested, and try to display it
-     *
-     * @return string
-     */
-    private function view($sPage = false) {
-        // which page are we on?
-        if (empty($sPage)) $sPage = $this->router->determinePage();
-        $page = new Page($this->context);
-        $page->load($sPage);
-
-        return $page->run();
-    }
 
     /**
      * return an array of all pages
@@ -136,14 +128,12 @@ class ControllerPage extends Controller
     private function list() {
         $aResult = array();
         if (VerifyToken::apiTokenCheck() && Login::hasGroup("admin")) {
-            // TODO: check if this name does not already exist, and if not, use some kind of locking mechanism to reserve it for this user.
-
-            $page = new Page($this->context);
+            $template = new Template($this->context);
 
             // tell caller everything turned out well:
             $aResult['status'] = "OK";
 
-            $aResult['pages'] = $page->list();
+            $aResult['templates'] = $template->list();
         }
         return $aResult;
     }
