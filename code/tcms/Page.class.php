@@ -126,6 +126,11 @@ class Page
     }
 
     public function load($sPage) {
+        $this->context->log->add("Loading page with name: ".$sPage,Log::TYPE_INFO);
+        if (empty($sPage)) {
+            $this->context->log->add("Load page called with an empty page name",Log::TYPE_ERROR);
+            return false;
+        }
         $this->setName($sPage);
         $sCategory = $this->getCategory();
         if (!empty($sCategory)) {
@@ -153,6 +158,12 @@ class Page
     }
 
     public function save() {
+        $this->context->log->add("Saving page: ".$this->getName(),Log::TYPE_INFO);
+
+        if (empty($this->getName())) {
+            $this->context->log->add("Save page called with an empty page name",Log::TYPE_ERROR);
+            return false;
+        }
         $fs = new FileSystem($this->context);
         // we only update content pages:
         return $fs->save('page',$this->getName(),$this->getContent());

@@ -25,6 +25,7 @@ class StartupTest extends TestCase
         $this->assertTrue(class_exists('\tcms\Login'));
         $this->assertTrue(class_exists('\tcms\Output'));
         $this->assertTrue(class_exists('\tcms\Page'));
+        $this->assertTrue(class_exists('\tcms\Block'));
         $this->assertTrue(class_exists('\tcms\Render'));
         $this->assertTrue(class_exists('\tcms\Router'));
         $this->assertTrue(class_exists('\tcms\Startup'));

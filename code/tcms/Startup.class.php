@@ -22,6 +22,7 @@ class Startup {
         require_once("Parser.class.php");
         require_once("Template.class.php");
         require_once("Page.class.php");
+        require_once("Block.class.php");
         require_once("Login.class.php");
         require_once("Render.class.php");
         require_once("Output.class.php");
