@@ -26,6 +26,7 @@ class Startup {
         require_once("Login.class.php");
         require_once("Render.class.php");
         require_once("Output.class.php");
+        require_once("Asset.class.php");
 
         // include all command classes in command dir, but perhaps, it is better to include a command
         // on demand in the renderer?

@@ -1,6 +1,7 @@
 <?php
 namespace tcms\controllers;
 
+use tcms\Asset;
 use tcms\FileSystem;
 use tcms\Login;
 use tcms\Page;
@@ -18,7 +19,10 @@ class ControllerAsset extends Controller
         if (empty($sAction)) $sAction="list";
         switch($sAction) {
             case "list":
-                $this->output->json($this->form());
+                $this->output->json($this->list());
+                break;
+            case "delete":
+                $this->output->json($this->delete());
                 break;
             case "upload":
                 $this->output->json($this->upload());
@@ -27,17 +31,48 @@ class ControllerAsset extends Controller
         }
     }
 
-    private function form() {
-        $a = array();
+    private function delete() {
+        $aResult = array();
         if (VerifyToken::apiTokenCheck() && Login::hasGroup("admin")) {
-            $fs = new FileSystem($this->context);
-            $sFileName = "asset-upload-form";
-            $sForm = $fs->load('block_admin', $sFileName);
-            if (!empty($sForm)) {
-                $a['status'] = 'OK';
-                $a['form'] = $sForm;
+            $aParam = Tools::jsonPost();
+            $sAsset = $aParam['asset'];
+            if (!empty($sAsset)) {
+                $asset = new Asset($this->context);
+                $asset->setName($sAsset);
+                if ($asset->delete()) {
+                    $aResult['status'] = "OK";
+                }
             }
         }
+        return $aResult;
+    }
+
+    private function form() {
+        $sResult = "";
+        if (VerifyToken::apiTokenCheck() && Login::hasGroup("admin")) {
+            $fs = new FileSystem($this->context);
+            $sResult = $fs->load('block_admin', "asset-upload-form");
+        }
+        return $sResult;
+    }
+
+    private function list() {
+        $a = array();
+
+        if (VerifyToken::apiTokenCheck() && Login::hasGroup("admin")) {
+            $sForm = $this->form();
+            if (!empty($sForm)) {
+                $a['form'] = $sForm;
+            }
+
+            $asset = new Asset($this->context);
+            $a['assets'] = $asset->list();
+
+            // tell caller everything turned out well:
+            $a['status'] = "OK";
+
+        }
+
         return $a;
     }
 

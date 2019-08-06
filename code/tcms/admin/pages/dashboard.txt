@@ -17,10 +17,6 @@
                 <div class="card" >
                   <div class="card-body">
                     <h5 class="card-title">TCMS dashboard</h5>
-                    <h6 class="card-subtitle mb-2 text-muted">Card subtitle</h6>
-                    <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
-                    <a href="#" class="card-link">Card link</a>
-                    <a href="#" class="card-link">Another link</a>
                   </div>
                 </div>
             </div>
@@ -103,9 +99,24 @@ window.dashboardController = function(sSystem,sAction) {
                     });
                  }
             } else if (sSystem==='asset') {
-                var div = document.createElement('div')
-                div.innerHTML = result.form;
-                oId.append(div);
+
+                if (typeof result.form != 'undefined') {
+                    var div = document.createElement('div')
+                    div.innerHTML = result.form;
+                    oId.append(div);
+                }
+
+                if (typeof result.assets != 'undefined') {
+                    let items = result.assets;
+                    if (Array.isArray(items)) {
+                       items.forEach(function(item) {
+                           tcms.addCard('content',item.name,'...',item.summary,'\
+                               <a href="javascript://" onclick="dashboardDeleteAsset(this)" data-name="'+item.nameSafe+'" class="card-link btn btn-sm btn-danger">delete</a>\
+                           ');
+                       });
+                    }
+                }
+
                 window.dashboardSetAssetHandlers();
             }
         }
@@ -262,6 +273,22 @@ window.dashboardDeleteTemplate = function(link) {
                     if (result.status==='OK') {
                         alert('template deleted');
                         window.dashboardController('template','list');
+                    }
+        });
+    }
+}
+
+window.dashboardDeleteAsset = function(link) {
+    var sName = link.getAttribute('data-name');
+    if (confirm('Are you sure you want to delete asset "' + sName + '"?')) {
+        tcms.apiCall('asset','delete',{
+                     'asset':sName
+        },function(result) {
+                    var oId = document.getElementById('content');
+                    oId.innerHTML = '';
+                    if (result.status==='OK') {
+                        alert('asset deleted');
+                        window.dashboardController('asset','list');
                     }
         });
     }

@@ -199,4 +199,24 @@ class FileSystem
 
         return $a;
     }
+
+    public function captionFileSize($sCategory, $sFileName)
+    {
+        $sResult = "0";
+        $a=['B','Kb','Mb','Gb','Tb','Pb'];
+        $sFullPath = $this->getFullPath($sCategory,$sFileName);
+
+        if (!empty($sFullPath)) {
+            $iBytes = filesize($sFullPath);
+            if (!empty($iBytes)) {
+                $iO = floor(log($iBytes,1024));
+                if ($iO < count($a)) {
+                    $sResult = strval(round($iBytes / pow(1024,$iO),2) . $a[$iO]);
+                }
+            }
+        }
+
+        return $sResult;
+
+    }
 }
