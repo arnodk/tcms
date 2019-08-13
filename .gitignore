@@ -9,3 +9,4 @@ public/css/*
 vendor/*
 config/*
 .idea/*
+composer.lock
