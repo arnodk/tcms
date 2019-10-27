@@ -38,8 +38,9 @@ window.dashboardFireEvent = function(oLink) {
     window.dashboardController(sSystem, sAction);
 }
 
-window.dashboardController = function(sSystem,sAction) {
-    tcms.apiCall(sSystem,sAction,{},function(result) {
+window.dashboardController = function(sSystem,sAction, oParams) {
+    if (typeof oParams === 'undefined') oParams = {};
+    tcms.apiCall(sSystem,sAction,oParams,function(result) {
         let oId = document.getElementById('content');
         oId.innerHTML = '';
 
