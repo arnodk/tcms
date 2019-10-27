@@ -24,7 +24,11 @@ class Config {
 
     public function getBaseURL() {
         if (isset($_SERVER['SERVER_PROTOCOL'])) {
-            return (stripos($_SERVER['SERVER_PROTOCOL'], 'https') === 0 ? 'https://' : 'http://') . $_SERVER['SERVER_NAME'] . dirname($_SERVER['SCRIPT_NAME']);
+            $sProtocol = (stripos($_SERVER['SERVER_PROTOCOL'], 'https') === 0 ? 'https://' : 'http://') ;
+            $iPort = intval($_SERVER['SERVER_PORT']);
+            $sPort=(($sProtocol==="https://" && $iPort != 443) || ($sProtocol==="http://" && $iPort != 80))?(":".strval($iPort)):"";
+
+            return $sProtocol. $_SERVER['SERVER_NAME']. $sPort . dirname($_SERVER['SCRIPT_NAME']);
         } else {
             // cli call:
             return $this->getFromSetup('general','cli-host');
