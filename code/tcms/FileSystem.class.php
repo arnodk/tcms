@@ -107,7 +107,7 @@ class FileSystem
         return $sFileName.".".$sExtension;
     }
 
-    private function getFullPath($sCategory,$sFileName) {
+    private function getFullPath($sCategory,$sFileName,$bAddExtension=true) {
         // sanity check:
         if (empty($sCategory) || empty($sFileName)) return "";
 
@@ -115,7 +115,7 @@ class FileSystem
         $sCategory = strtolower($sCategory);
 
         $sContentDir = $this->getCategoryDir($sCategory);
-        $sFileName = $this->addFileNameExtension($sFileName,$sCategory);
+        if ($bAddExtension) $sFileName = $this->addFileNameExtension($sFileName,$sCategory);
 
         // recheck, if an error occured, these might be set to an empty string
         if (empty($sContentDir) || empty($sFileName)) return "";
@@ -128,9 +128,9 @@ class FileSystem
      * @param $sFileName
      * @return bool|string
      */
-    public function load($sCategory, $sFileName) {
+    public function load($sCategory, $sFileName, $bAddExtenstion=true) {
 
-        $sFullPath = $this->getFullPath($sCategory,$sFileName);
+        $sFullPath = $this->getFullPath($sCategory,$sFileName,$bAddExtenstion);
         if (empty($sFullPath)) return "";
 
         if (!file_exists($sFullPath)) {
