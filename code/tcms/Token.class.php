@@ -78,6 +78,10 @@ class Token {
         return $this->aArgs[$iIndex];
     }
 
+    public function getArgCount() {
+        return count($this->aArgs);
+    }
+
     public function getContent() {
         return $this->sContent;
     }

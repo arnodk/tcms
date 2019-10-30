@@ -55,7 +55,7 @@ class Tools
     }
 
     public static function post($sKey,$sType="string",$sIfEmpty="") {
-        if (!empty($_GET[$sKey])) return self::sanitizeInput($_GET[$sKey],$sType);
+        if (!empty($_POST[$sKey])) return self::sanitizeInput($_GET[$sKey],$sType);
 
         return $sIfEmpty;
     }

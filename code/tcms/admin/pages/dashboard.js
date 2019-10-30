@@ -79,15 +79,16 @@ window.dashboardController = function(sSystem,sAction, oParams) {
                     oId.append(div);
                 }
 
-                if (typeof result.assets != 'undefined') {
-                    let items = result.assets;
-                    if (Array.isArray(items)) {
-                       items.forEach(function(item) {
-                           tcms.addCard('content',item.name,'...',item.summary,'\
+                if (typeof result.list_data !== 'undefined') {
+                    var pager = tcms.pager(result.list_data,document.getElementById('content'));
+                    pager.row(function(item) {
+                        tcms.addCard('content',item.name,'...',item.summary,'\
                                <a href="javascript://" onclick="dashboardDeleteAsset(this)" data-name="'+item.nameSafe+'" class="card-link btn btn-sm btn-danger">delete</a>\
-                           ');
-                       });
-                    }
+                        ');
+                    });
+                    pager.renderControls(function(iPage) {
+                        window.dashboardController('asset','list',{'page':iPage});
+                    });
                 }
 
                 window.dashboardSetAssetHandlers();

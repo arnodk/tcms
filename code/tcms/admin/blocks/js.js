@@ -165,6 +165,41 @@ class Tcms {
         s = s.replace('"','\\"');
         return s;
     }
+
+    pager(data,elList) {
+        var iPage = parseInt(data.page);
+        return {
+            row:function(fRow) {
+                data.data.forEach(fRow);
+            },
+            renderControls:function(fPageChange) {
+                console.log(data);
+                let divControls = document.createElement('DIV');
+                divControls.classList.add('pager_controls');
+                if (!data.is_first_page===true) {
+                    let div = document.createElement('DIV');
+                    div.classList.add('pager_controls_prev');
+                    let text = document.createTextNode('&lt;');
+                    div.appendChild(text);
+                    div.addEventListener("click",function() {
+                        fPageChange(iPage-1);
+                    });
+                    divControls.appendChild(div);
+                }
+                if (!data.is_last_page===true) {
+                    let div = document.createElement('DIV');
+                    div.classList.add('pager_controls_next');
+                    let text = document.createTextNode('&gt;');
+                    div.appendChild(text);
+                    div.addEventListener("click",function() {
+                        fPageChange(iPage+1);
+                    });
+                    divControls.appendChild(div);
+                }
+                elList.appendChild(divControls);
+            }
+        }
+    }
 }
 
 let tcms = new Tcms();

@@ -46,7 +46,7 @@ class Asset
     }
 
     public function list() {
-        // run through all the assets, and retrieve basic info about them::
+        // run through all the assets, and retrieve basic info about them:
         $fs = new FileSystem($this->context);
         $aResult = array();
         foreach($fs->list('asset',false) as $sFilename) {
