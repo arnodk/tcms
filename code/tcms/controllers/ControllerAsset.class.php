@@ -5,6 +5,7 @@ use tcms\Asset;
 use tcms\FileSystem;
 use tcms\Login;
 use tcms\Page;
+use tcms\tools\PageFilter;
 use tcms\tools\Tools;
 use tcms\VerifyToken;
 
@@ -19,7 +20,9 @@ class ControllerAsset extends Controller
         if (empty($sAction)) $sAction="list";
         switch($sAction) {
             case "list":
-                $this->output->json($this->list());
+                $post = Tools::jsonPost();
+                $page = intval((!empty($post['page']))?$post['page']:1);
+                $this->output->json($this->list($page));
                 break;
             case "delete":
                 $this->output->json($this->delete());
@@ -56,8 +59,10 @@ class ControllerAsset extends Controller
         return $sResult;
     }
 
-    private function list() {
+    private function list($iPage=1) {
         $a = array();
+
+        $pf = new PageFilter();
 
         if (VerifyToken::apiTokenCheck() && Login::hasGroup("admin")) {
             $sForm = $this->form();
@@ -66,7 +71,9 @@ class ControllerAsset extends Controller
             }
 
             $asset = new Asset($this->context);
-            $a['assets'] = $asset->list();
+            $pf->setData($asset->list());
+            $pf->setPage($iPage);
+            $a['list_data'] = $pf->dataForPage();
 
             // tell caller everything turned out well:
             $a['status'] = "OK";
