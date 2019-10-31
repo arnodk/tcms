@@ -174,27 +174,39 @@ class Tcms {
             },
             renderControls:function(fPageChange) {
                 console.log(data);
-                let divControls = document.createElement('DIV');
+                let divControls = document.createElement('nav');
                 divControls.classList.add('pager_controls');
+                let ul = document.createElement('ul');
+                ul.classList.add('pagination');
+                divControls.appendChild(ul);
+
                 if (!data.is_first_page===true) {
-                    let div = document.createElement('DIV');
-                    div.classList.add('pager_controls_prev');
-                    let text = document.createTextNode('&lt;');
-                    div.appendChild(text);
-                    div.addEventListener("click",function() {
+                    let li = document.createElement('li');
+                    li.classList.add('page-item');
+                    let a = document.createElement('a');
+                    a.classList.add('page-link');
+                    let text = document.createTextNode('previous');
+                    a.appendChild(text);
+                    a.addEventListener("click",function() {
                         fPageChange(iPage-1);
                     });
-                    divControls.appendChild(div);
+                    li.appendChild(a);
+
+                    ul.appendChild(li);
                 }
                 if (!data.is_last_page===true) {
-                    let div = document.createElement('DIV');
-                    div.classList.add('pager_controls_next');
-                    let text = document.createTextNode('&gt;');
-                    div.appendChild(text);
-                    div.addEventListener("click",function() {
+                    let li = document.createElement('li');
+                    li.classList.add('page-item');
+                    let a = document.createElement('a');
+                    a.classList.add('page-link');
+                    let text = document.createTextNode('next');
+                    a.appendChild(text);
+                    a.addEventListener("click",function() {
                         fPageChange(iPage+1);
                     });
-                    divControls.appendChild(div);
+                    li.appendChild(a);
+
+                    ul.appendChild(li);
                 }
                 elList.appendChild(divControls);
             }
