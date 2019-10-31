@@ -3,6 +3,7 @@ namespace tcms\controllers;
 
 use tcms\Login;
 use tcms\Page;
+use tcms\tools\PageFilter;
 use tcms\tools\Tools;
 use tcms\VerifyToken;
 
@@ -43,7 +44,8 @@ class ControllerPage extends Controller
                 $this->output->json($this->delete());
                 break;
             case "list":
-                $this->output->json($this->list());
+                $page = intval(Tools::jsonPostKey('page',1));
+                $this->output->json($this->list($page));
                 break;
         }
 
@@ -157,18 +159,26 @@ class ControllerPage extends Controller
      *
      * @return array
      */
-    private function list() {
+    private function list($iPage = 1) {
         $aResult = array();
+
         if (VerifyToken::apiTokenCheck() && Login::hasGroup("admin")) {
             // TODO: check if this name does not already exist, and if not, use some kind of locking mechanism to reserve it for this user.
 
             $page = new Page($this->context);
 
+            $pf = new PageFilter();
+            $pf->setData($page->list());
+            $pf->setPage($iPage);
+
+            $aResult['list_data'] = $pf->dataForPage();
+
             // tell caller everything turned out well:
             $aResult['status'] = "OK";
-
-            $aResult['pages'] = $page->list();
+        } else {
+            $aResult['status'] = "FAILED";
         }
+
         return $aResult;
     }
 }

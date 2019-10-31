@@ -14,7 +14,7 @@ class PageFilter
     private $aData;
     private $aFilters;
     private $aConfig;
-    private $iDefaultPageSize = 10;
+    private $iDefaultPageSize = 2;
     private $iPage = 1;
 
     public function __construct($aConfig=[])

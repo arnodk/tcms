@@ -110,4 +110,14 @@ class Tools
 
         return $data;
     }
+
+    public static function jsonPostKey($sKey, $sDefault=false) {
+        $payload = file_get_contents('php://input');
+
+        $data = json_decode($payload,true);
+        if (empty($data)) return $sDefault;
+        if (empty($data[$sKey])) return $sDefault;
+
+        return htmlspecialchars($data[$sKey], ENT_QUOTES);
+    }
 }

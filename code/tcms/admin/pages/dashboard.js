@@ -25,14 +25,17 @@ window.dashboardController = function(sSystem,sAction, oParams) {
                     }
                 },'add page','primary');
 
-                let items = result.pages;
-                if (Array.isArray(items)) {
-                    items.forEach(function(item) {
-                        tcms.addCard('content',item.name,'...',item.summary,'\
-                            <a href="javascript://" onclick="dashboardEditPage(this)" data-name="'+item.nameSafe+'" class="card-link btn btn-sm btn-primary">edit</a>\
-                            \
-                            <a href="javascript://" onclick="dashboardDeletePage(this)" data-name="'+item.nameSafe+'" class="card-link btn btn-sm btn-danger">delete</a>\
-                        ');
+                if (typeof result.list_data !== 'undefined') {
+                    let pager = tcms.pager(result.list_data, document.getElementById('content'));
+                    pager.row(function (item) {
+                        tcms.addCard('content', item.name, '...', item.summary, '\
+                                <a href="javascript://" onclick="dashboardEditPage(this)" data-name="' + item.nameSafe + '" class="card-link btn btn-sm btn-primary">edit</a>\
+                                \
+                                <a href="javascript://" onclick="dashboardDeletePage(this)" data-name="' + item.nameSafe + '" class="card-link btn btn-sm btn-danger">delete</a>\
+                         ');
+                    });
+                    pager.renderControls(function (iPage) {
+                        window.dashboardController('page', 'list', {'page': iPage});
                     });
                 }
             } else if (sSystem==='block') {
@@ -43,16 +46,19 @@ window.dashboardController = function(sSystem,sAction, oParams) {
                     }
                  },'add block','primary');
 
-                 let items = result.blocks;
-                 if (Array.isArray(items)) {
-                    items.forEach(function(item) {
+                if (typeof result.list_data !== 'undefined') {
+                    let pager = tcms.pager(result.list_data, document.getElementById('content'));
+                    pager.row(function(item) {
                         tcms.addCard('content',item.name,'...',item.summary,'\
                             <a href="javascript://" onclick="dashboardEditBlock(this)" data-name="'+item.nameSafe+'" class="card-link btn btn-sm btn-primary">edit</a>\
                             \
                             <a href="javascript://" onclick="dashboardDeleteBlock(this)" data-name="'+item.nameSafe+'" class="card-link btn btn-sm btn-danger">delete</a>\
                         ');
                     });
-                 }
+                    pager.renderControls(function (iPage) {
+                        window.dashboardController('block', 'list', {'page': iPage});
+                    });
+                }
             } else if (sSystem==='template') {
                  tcms.addButton('content','btnAddTemplate',function() {
                     var sTemplateName = prompt('Template name:');
@@ -61,16 +67,19 @@ window.dashboardController = function(sSystem,sAction, oParams) {
                     }
                  },'add template','primary');
 
-                 let items = result.templates;
-                 if (Array.isArray(items)) {
-                    items.forEach(function(item) {
+                if (typeof result.list_data !== 'undefined') {
+                    let pager = tcms.pager(result.list_data, document.getElementById('content'));
+                    pager.row(function(item) {
                         tcms.addCard('content',item.name,'...',item.summary,'\
                             <a href="javascript://" onclick="dashboardEditTemplate(this)" data-name="'+item.nameSafe+'" class="card-link btn btn-sm btn-primary">edit</a>\
                             \
                             <a href="javascript://" onclick="dashboardDeleteTemplate(this)" data-name="'+item.nameSafe+'" class="card-link btn btn-sm btn-danger">delete</a>\
                         ');
                     });
-                 }
+                    pager.renderControls(function (iPage) {
+                        window.dashboardController('template', 'list', {'page': iPage});
+                    });
+                }
             } else if (sSystem==='asset') {
 
                 if (typeof result.form != 'undefined') {

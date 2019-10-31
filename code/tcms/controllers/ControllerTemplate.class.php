@@ -5,6 +5,7 @@ use tcms\Block;
 use tcms\Login;
 use tcms\Page;
 use tcms\Template;
+use tcms\tools\PageFilter;
 use tcms\tools\Tools;
 use tcms\VerifyToken;
 
@@ -45,7 +46,8 @@ class ControllerTemplate extends Controller
                 $this->output->json($this->delete());
                 break;
             case "list":
-                $this->output->json($this->list());
+                $page = intval(Tools::jsonPostKey('page',1));
+                $this->output->json($this->list($page));
                 break;
         }
     }
@@ -147,15 +149,21 @@ class ControllerTemplate extends Controller
      *
      * @return array
      */
-    private function list() {
+    private function list($iPage = 1) {
         $aResult = array();
         if (VerifyToken::apiTokenCheck() && Login::hasGroup("admin")) {
             $template = new Template($this->context);
 
+            $pf = new PageFilter();
+            $pf->setData($template->list());
+            $pf->setPage($iPage);
+
+            $aResult['list_data'] = $pf->dataForPage();
+
             // tell caller everything turned out well:
             $aResult['status'] = "OK";
-
-            $aResult['templates'] = $template->list();
+        } else {
+            $aResult['status'] = "FAILED";
         }
         return $aResult;
     }

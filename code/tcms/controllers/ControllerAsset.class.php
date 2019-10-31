@@ -20,8 +20,7 @@ class ControllerAsset extends Controller
         if (empty($sAction)) $sAction="list";
         switch($sAction) {
             case "list":
-                $post = Tools::jsonPost();
-                $page = intval((!empty($post['page']))?$post['page']:1);
+                $page = intval(Tools::jsonPostKey('page',1));
                 $this->output->json($this->list($page));
                 break;
             case "delete":
@@ -62,8 +61,6 @@ class ControllerAsset extends Controller
     private function list($iPage=1) {
         $a = array();
 
-        $pf = new PageFilter();
-
         if (VerifyToken::apiTokenCheck() && Login::hasGroup("admin")) {
             $sForm = $this->form();
             if (!empty($sForm)) {
@@ -71,13 +68,16 @@ class ControllerAsset extends Controller
             }
 
             $asset = new Asset($this->context);
+
+            $pf = new PageFilter();
             $pf->setData($asset->list());
             $pf->setPage($iPage);
             $a['list_data'] = $pf->dataForPage();
 
             // tell caller everything turned out well:
             $a['status'] = "OK";
-
+        } else {
+            $a['status'] = "FAILED";
         }
 
         return $a;
