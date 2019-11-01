@@ -80,6 +80,7 @@ window.templateController = function(result,sAction,oParams) {
 };
 
 window.assetController = function(result,sAction,oParams) {
+    let oId = document.getElementById('content');
 
     if (typeof result.form !== 'undefined') {
         let div = document.createElement('div')
