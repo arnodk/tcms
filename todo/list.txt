@@ -1,6 +1,16 @@
+- pager maken voor admin elementen, maar misschien ook als blockcommand, gevoed door een lange lijst.
 - log bestand wordt nog niet aangemaakt.
 - in link command lijkt het erop dat de recursie weggevallen is?
 - block command implementeren
 - spider bouwen die alle pagina's doorloopt en een deploybare website in een html structuur dumpt.
 - neem docker docu's of mozilla docu's als een voorbeeld van default site opbouw.
 - simpele editor, met mogelijkheid statische html deployable zips te genereren.
+- carousel bootstrap gebruiken
+- artikelen,
+    - dev. omgeving windows/linux/mac?
+    - docker, switchen omgeving
+- editor via contenteditable veld?
+- fetch javascript api ook voor upload gebruiken?
+- fileupload:
+    https://kongaraju.blogspot.com/2012/07/large-file-upload-more-than-1gb-using.html
+- popup command, ala popup zoals gmail kalender popup bij klik op afspraak.

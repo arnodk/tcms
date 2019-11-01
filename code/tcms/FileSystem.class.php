@@ -33,6 +33,7 @@ class FileSystem
 
         switch($sCategory) {
             case "user":
+            case "login":
                 $sContentDir = "/content/users";
                 break;
             case "page":

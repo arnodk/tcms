@@ -123,6 +123,27 @@ window.logController = function(result,sAction,oParams) {
 
 };
 
+window.userController = function(result,sAction,oParams) {
+
+    if (typeof result.list_data !== 'undefined') {
+        let pager = tcms.pager(result.list_data,document.getElementById('content'));
+        pager.row(function(item) {
+            if (item.name !== 'root') {
+                sDeleteLink = '<a href="javascript://" onclick="dashboardLoginDelete(this)" data-name="\'+item.name+\'" class="card-link btn btn-sm btn-danger">delete</a>'
+            } else {
+                sDeleteLink = '';
+            }
+            tcms.addCard('content',item.name, '', '','' +
+                '<a href="javascript://" onclick="dashboardLoginChangePw(this)" data-name="'+item.name+'" class="card-link btn btn-sm btn-warning">change password</a>' +
+                sDeleteLink);
+        });
+        pager.renderControls(function(iPage) {
+            window.dashboardController('user','list',{'page':iPage});
+        });
+    }
+
+};
+
 window.dashboardController = function(sSystem,sAction, oParams) {
     if (typeof oParams === 'undefined') oParams = {};
     tcms.apiCall(sSystem,sAction,oParams,function(result) {
@@ -140,6 +161,8 @@ window.dashboardController = function(sSystem,sAction, oParams) {
                 assetController(result,sAction,oParams);
             } else if (sSystem==='log') {
                 logController(result,sAction,oParams);
+            } else if (sSystem==='login') {
+                userController(result,sAction,oParams);
             }
         }
     });

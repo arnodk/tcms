@@ -87,4 +87,18 @@ class Login {
         // this effectively makes the current user to be considered "logged in".
         $_SESSION['tcms_login'] = serialize($this);
     }
+
+    public function list() {
+        // run through all the pages, and retrieve basic info about them::
+        $fs = new FileSystem($this->context);
+        $aResult = array();
+        foreach($fs->list('login') as $sLogin) {
+
+            $aPage = array(
+                "name"          => $sLogin
+            );
+            $aResult[] = $aPage;
+        }
+        return $aResult;
+    }
 }

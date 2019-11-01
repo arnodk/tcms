@@ -3,6 +3,7 @@ namespace tcms\controllers;
 
 use tcms\Login;
 use tcms\Page;
+use tcms\tools\PageFilter;
 use tcms\tools\Tools;
 use tcms\VerifyToken;
 
@@ -47,6 +48,10 @@ class ControllerLogin extends Controller
                 }
                 $this->output->json($a);
                 break;
+            case "list":
+                $page = intval(Tools::jsonPostKey('page',1));
+                $this->output->json($this->list($page));
+                break;
             default:
                 $page = new Page($this->context,Page::PAGE_ADMIN);
                 $page->load("login");
@@ -55,5 +60,27 @@ class ControllerLogin extends Controller
                     $this->output->push($sToOutput);
                 }
         }
+    }
+
+    private function list($iPage = 1) {
+        $aResult = array();
+
+        if (VerifyToken::apiTokenCheck() && Login::hasGroup("admin")) {
+
+            $login = new Login($this->context);
+
+            $pf = new PageFilter();
+            $pf->setData($login->list());
+            $pf->setPage($iPage);
+
+            $aResult['list_data'] = $pf->dataForPage();
+
+            // tell caller everything turned out well:
+            $aResult['status'] = "OK";
+        } else {
+            $aResult['status'] = "FAILED";
+        }
+
+        return $aResult;
     }
 }
