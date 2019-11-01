@@ -10,6 +10,118 @@ window.dashboardFireEvent = function(oLink) {
     window.dashboardController(sSystem, sAction);
 };
 
+window.pageController = function(result,sAction,oParams) {
+    tcms.addButton('content','btnAddPage',function() {
+        let sPageName = prompt('Page name:');
+        if (sPageName!=null && sPageName!=="") {
+            window.dashboardAddPage(tcms.escape(sPageName));
+        }
+    },'add page','primary');
+
+    if (typeof result.list_data !== 'undefined') {
+        let pager = tcms.pager(result.list_data, document.getElementById('content'));
+        pager.row(function (item) {
+            tcms.addCard('content', item.name, '...', item.summary, '\
+                                <a href="javascript://" onclick="dashboardEditPage(this)" data-name="' + item.nameSafe + '" class="card-link btn btn-sm btn-primary">edit</a>\
+                                \
+                                <a href="javascript://" onclick="dashboardDeletePage(this)" data-name="' + item.nameSafe + '" class="card-link btn btn-sm btn-danger">delete</a>\
+            ');
+        });
+        pager.renderControls(function (iPage) {
+            window.dashboardController('page', 'list', {'page': iPage});
+        });
+    }
+};
+
+window.blockController = function(result,sAction,oParams) {
+    tcms.addButton('content','btnAddBlock',function() {
+        let sBlockName = prompt('Block name:');
+        if (sBlockName!=null && sBlockName!="") {
+            window.dashboardAddBlock(tcms.escape(sBlockName));
+        }
+    },'add block','primary');
+
+    if (typeof result.list_data !== 'undefined') {
+        let pager = tcms.pager(result.list_data, document.getElementById('content'));
+        pager.row(function(item) {
+            tcms.addCard('content',item.name,'...',item.summary,'\
+                            <a href="javascript://" onclick="dashboardEditBlock(this)" data-name="'+item.nameSafe+'" class="card-link btn btn-sm btn-primary">edit</a>\
+                            \
+                            <a href="javascript://" onclick="dashboardDeleteBlock(this)" data-name="'+item.nameSafe+'" class="card-link btn btn-sm btn-danger">delete</a>\
+            ');
+        });
+        pager.renderControls(function (iPage) {
+            window.dashboardController('block', 'list', {'page': iPage});
+        });
+    }
+};
+
+window.templateController = function(result,sAction,oParams) {
+    tcms.addButton('content','btnAddTemplate',function() {
+        let sTemplateName = prompt('Template name:');
+        if (sTemplateName!=null && sTemplateName!="") {
+            window.dashboardAddTemplate(tcms.escape(sTemplateName));
+        }
+    },'add template','primary');
+
+    if (typeof result.list_data !== 'undefined') {
+        let pager = tcms.pager(result.list_data, document.getElementById('content'));
+        pager.row(function(item) {
+            tcms.addCard('content',item.name,'...',item.summary,'\
+                            <a href="javascript://" onclick="dashboardEditTemplate(this)" data-name="'+item.nameSafe+'" class="card-link btn btn-sm btn-primary">edit</a>\
+                            \
+                            <a href="javascript://" onclick="dashboardDeleteTemplate(this)" data-name="'+item.nameSafe+'" class="card-link btn btn-sm btn-danger">delete</a>\
+            ');
+        });
+        pager.renderControls(function (iPage) {
+            window.dashboardController('template', 'list', {'page': iPage});
+        });
+    }
+};
+
+window.assetController = function(result,sAction,oParams) {
+
+    if (typeof result.form !== 'undefined') {
+        let div = document.createElement('div')
+        div.innerHTML = result.form;
+        oId.append(div);
+    }
+
+    if (typeof result.list_data !== 'undefined') {
+        let pager = tcms.pager(result.list_data,document.getElementById('content'));
+        pager.row(function(item) {
+            tcms.addCard('content',item.name,'...',item.summary,'\
+                               <a href="javascript://" onclick="dashboardDeleteAsset(this)" data-name="'+item.nameSafe+'" class="card-link btn btn-sm btn-danger">delete</a>\
+            ');
+        });
+        pager.renderControls(function(iPage) {
+            window.dashboardController('asset','list',{'page':iPage});
+        });
+    }
+
+    window.dashboardSetAssetHandlers();
+};
+
+window.logController = function(result,sAction,oParams) {
+
+    if (typeof result.list_data !== 'undefined') {
+        let pager = tcms.pager(result.list_data,document.getElementById('content'));
+        pager.row(function(item) {
+            tcms.addCard('content',item.datetime, item.type, '<div class="row dashboard-log-header">' +
+                '   <div class="col-sm-12">'+item.addr+'</div>' +
+                '</div>' +
+                '<div class="row dashboard-body">' +
+                '   <div class="col-sm-12">'+item.message+'</div>' +
+                '</div>',
+            '');
+        });
+        pager.renderControls(function(iPage) {
+            window.dashboardController('log','list',{'page':iPage});
+        });
+    }
+
+};
+
 window.dashboardController = function(sSystem,sAction, oParams) {
     if (typeof oParams === 'undefined') oParams = {};
     tcms.apiCall(sSystem,sAction,oParams,function(result) {
@@ -18,89 +130,15 @@ window.dashboardController = function(sSystem,sAction, oParams) {
 
         if (result.status==='OK') {
             if (sSystem === 'page') {
-                tcms.addButton('content','btnAddPage',function() {
-                    var sPageName = prompt('Page name:');
-                    if (sPageName!=null && sPageName!="") {
-                        window.dashboardAddPage(tcms.escape(sPageName));
-                    }
-                },'add page','primary');
-
-                if (typeof result.list_data !== 'undefined') {
-                    let pager = tcms.pager(result.list_data, document.getElementById('content'));
-                    pager.row(function (item) {
-                        tcms.addCard('content', item.name, '...', item.summary, '\
-                                <a href="javascript://" onclick="dashboardEditPage(this)" data-name="' + item.nameSafe + '" class="card-link btn btn-sm btn-primary">edit</a>\
-                                \
-                                <a href="javascript://" onclick="dashboardDeletePage(this)" data-name="' + item.nameSafe + '" class="card-link btn btn-sm btn-danger">delete</a>\
-                         ');
-                    });
-                    pager.renderControls(function (iPage) {
-                        window.dashboardController('page', 'list', {'page': iPage});
-                    });
-                }
+                pageController(result,sAction,oParams);
             } else if (sSystem==='block') {
-                 tcms.addButton('content','btnAddBlock',function() {
-                    var sBlockName = prompt('Block name:');
-                    if (sBlockName!=null && sBlockName!="") {
-                        window.dashboardAddBlock(tcms.escape(sBlockName));
-                    }
-                 },'add block','primary');
-
-                if (typeof result.list_data !== 'undefined') {
-                    let pager = tcms.pager(result.list_data, document.getElementById('content'));
-                    pager.row(function(item) {
-                        tcms.addCard('content',item.name,'...',item.summary,'\
-                            <a href="javascript://" onclick="dashboardEditBlock(this)" data-name="'+item.nameSafe+'" class="card-link btn btn-sm btn-primary">edit</a>\
-                            \
-                            <a href="javascript://" onclick="dashboardDeleteBlock(this)" data-name="'+item.nameSafe+'" class="card-link btn btn-sm btn-danger">delete</a>\
-                        ');
-                    });
-                    pager.renderControls(function (iPage) {
-                        window.dashboardController('block', 'list', {'page': iPage});
-                    });
-                }
+                 blockController(result,sAction,oParams);
             } else if (sSystem==='template') {
-                 tcms.addButton('content','btnAddTemplate',function() {
-                    var sTemplateName = prompt('Template name:');
-                    if (sTemplateName!=null && sTemplateName!="") {
-                        window.dashboardAddTemplate(tcms.escape(sTemplateName));
-                    }
-                 },'add template','primary');
-
-                if (typeof result.list_data !== 'undefined') {
-                    let pager = tcms.pager(result.list_data, document.getElementById('content'));
-                    pager.row(function(item) {
-                        tcms.addCard('content',item.name,'...',item.summary,'\
-                            <a href="javascript://" onclick="dashboardEditTemplate(this)" data-name="'+item.nameSafe+'" class="card-link btn btn-sm btn-primary">edit</a>\
-                            \
-                            <a href="javascript://" onclick="dashboardDeleteTemplate(this)" data-name="'+item.nameSafe+'" class="card-link btn btn-sm btn-danger">delete</a>\
-                        ');
-                    });
-                    pager.renderControls(function (iPage) {
-                        window.dashboardController('template', 'list', {'page': iPage});
-                    });
-                }
+                 templateController(result,sAction,oParams);
             } else if (sSystem==='asset') {
-
-                if (typeof result.form != 'undefined') {
-                    var div = document.createElement('div')
-                    div.innerHTML = result.form;
-                    oId.append(div);
-                }
-
-                if (typeof result.list_data !== 'undefined') {
-                    var pager = tcms.pager(result.list_data,document.getElementById('content'));
-                    pager.row(function(item) {
-                        tcms.addCard('content',item.name,'...',item.summary,'\
-                               <a href="javascript://" onclick="dashboardDeleteAsset(this)" data-name="'+item.nameSafe+'" class="card-link btn btn-sm btn-danger">delete</a>\
-                        ');
-                    });
-                    pager.renderControls(function(iPage) {
-                        window.dashboardController('asset','list',{'page':iPage});
-                    });
-                }
-
-                window.dashboardSetAssetHandlers();
+                assetController(result,sAction,oParams);
+            } else if (sSystem==='log') {
+                logController(result,sAction,oParams);
             }
         }
     });

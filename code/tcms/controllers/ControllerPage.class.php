@@ -163,7 +163,6 @@ class ControllerPage extends Controller
         $aResult = array();
 
         if (VerifyToken::apiTokenCheck() && Login::hasGroup("admin")) {
-            // TODO: check if this name does not already exist, and if not, use some kind of locking mechanism to reserve it for this user.
 
             $page = new Page($this->context);
 
