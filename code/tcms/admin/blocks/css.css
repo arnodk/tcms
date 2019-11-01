@@ -135,3 +135,20 @@
     margin-top:20px;
     float:right;
 }
+
+.pager_controls .pagination .page-item {
+    cursor:pointer;
+    margin: 1px;
+    font-size: 0.8em;
+    width: 3.5em;
+    text-align: center;
+}
+
+.pager_controls .pagination .page-item.pager_page_active .page-link  {
+    background-color:#0069d9;
+    color:white;
+}
+
+.pager_controls ul.pagination {
+    flex-wrap:wrap;
+}
