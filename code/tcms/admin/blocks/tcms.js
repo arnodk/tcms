@@ -167,64 +167,10 @@ class Tcms {
     }
 
     pager(data,elList) {
-        let iPage = parseInt(data.page);
-        let maxControlButtonNumber = 10;
-        return {
-            row:function(fRow) {
-                data.data.forEach(fRow);
-            },
-            getControlLiItem:function(fClick, sCaption) {
-                let li = document.createElement('li');
-                li.classList.add('page-item');
-                let a = document.createElement('a');
-                a.classList.add('page-link');
-                let text = document.createTextNode(sCaption);
-                a.appendChild(text);
-                a.addEventListener("click",fClick);
-                li.appendChild(a);
-                return li;
-            },
-            renderControls:function(fPageChange) {
-                console.log(data);
-                let divControls = document.createElement('nav');
-                divControls.classList.add('pager_controls');
-                let ul = document.createElement('ul');
-                ul.classList.add('pagination');
-                divControls.appendChild(ul);
+        return new TcmsPager(data,elList);
+    }
 
-                if (parseInt(data.number_of_pages) > 1) {
-                    // previous button
-                    if (!data.is_first_page===true) {
-                        let li = this.getControlLiItem(function() {
-                            fPageChange(iPage-1);
-                        },'<');
-
-                        ul.appendChild(li);
-                    }
-
-                    // number buttons
-                    for(let i=1;(i<=data.number_of_pages && i<maxControlButtonNumber);i++) {
-                        let li = this.getControlLiItem(function() {
-                            fPageChange(i);
-                        },i);
-                        if (i===iPage) li.classList.add('pager_page_active');
-                        ul.appendChild(li);
-                    }
-
-                    // next button
-                    if (!data.is_last_page===true) {
-                        let li = this.getControlLiItem(function() {
-                            fPageChange(iPage+1);
-                        },'>');
-
-                        ul.appendChild(li);
-                    }
-                }
-
-                elList.appendChild(divControls);
-            }
-        }
+    modal() {
+        return new TcmsModal();
     }
 }
-
-let tcms = new Tcms();

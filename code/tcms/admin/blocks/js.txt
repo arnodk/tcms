@@ -1,1 +1,6 @@
-[readfile:block_admin:js.js]
+[readfile:block_admin:tcms.js]
+[readfile:block_admin:pager.js]
+[readfile:block_admin:modal.js]
+let tcms = new Tcms();
+let tcmsPager = new TcmsPager();
+let tcmsModal = new TcmsModal();

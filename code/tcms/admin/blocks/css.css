@@ -152,3 +152,7 @@
 .pager_controls ul.pagination {
     flex-wrap:wrap;
 }
+
+.modal.modal-show {
+    display:block;
+}
