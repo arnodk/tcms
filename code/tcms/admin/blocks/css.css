@@ -156,3 +156,7 @@
 .modal.modal-show {
     display:block;
 }
+
+.dashboard-input {
+    margin-bottom:1em;
+}

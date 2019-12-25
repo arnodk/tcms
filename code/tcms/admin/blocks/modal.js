@@ -4,6 +4,7 @@ class TcmsModal {
         this.title = '';
         this.fields = [];
         this.buttons = [];
+        this.content = false;
     }
 
     setTitle(sTitle) {
@@ -35,7 +36,15 @@ class TcmsModal {
             switch (field.type) {
                 case "text":
                     sResult = sResult + `
-                        <input class="form-control" placeholder="`+field.caption+`" />
+                        <input id="`+field.id+`" class="form-control dashboard-input dashboard-input-text" type="text" placeholder="`+field.caption+`" />
+                    `;
+                    break;
+                case "password":
+                    sResult = sResult + `
+                        <input id="`+field.id+`" class="form-control dashboard-input dashboard-input-password" type="password" placeholder="`+field.caption+`" />
+                    `;
+                    sResult = sResult + `
+                        <input id="`+field.id+`_repeat" class="form-control dashboard-input dashboard-input-password-repeat" type="password" placeholder="`+field.caption+` repeat" />
                     `;
                     break;
             }
@@ -45,13 +54,31 @@ class TcmsModal {
     }
 
     renderButtons() {
-        return '';
+        let sResult = '';
+
+        this.buttons.forEach(function(button) {
+            sResult = sResult + `
+                <button id="`+button.id+`" type="button" class="btn btn-`+button.class+`">`+button.caption+`</button>
+            `
+        });
+
+        return sResult;
+    }
+
+    setEventHandlers() {
+        this.buttons.forEach(function (button) {
+            document.getElementById(button.id).removeEventListener("click",button.click);
+            document.getElementById(button.id).addEventListener("click",button.click);
+        });
     }
 
     render(content) {
+        this.content = content;
+
         let sFields = this.renderFields();
         let sButtons = this.renderButtons();
-        content.insertAdjacentHTML(
+
+        this.content.insertAdjacentHTML(
             'afterbegin',
             `<div class="modal show modal-show" tabindex="-1" role="dialog">
               <div class="modal-dialog" role="document">
@@ -63,10 +90,10 @@ class TcmsModal {
                     </button>
                   </div>
                   <div class="modal-body">
-                    <p>Modal body text goes here.</p>
+                    `+sFields+`  
                   </div>
                   <div class="modal-footer">
-                    <button type="button" class="btn btn-primary">Save changes</button>
+                     `+sButtons+`
                     <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
                   </div>
                 </div>
@@ -74,5 +101,38 @@ class TcmsModal {
             </div>`
         );
 
+        this.setEventHandlers();
+
+    }
+
+    flash(sType,sText) {
+        let sClass='';
+        switch(sType) {
+            case 'error':
+                sClass = 'danger';
+                break;
+        }
+        document.getElementsByClassName('modal-footer')[0].insertAdjacentHTML('beforebegin',`
+            <div class="alert alert-`+sClass+` " role="alert">
+                `+sText+`
+            </div>
+        `)
+    }
+
+    getFieldData() {
+        // run through all fields, and return their values:
+        let data = {};
+        this.fields.forEach(function(field) {
+            switch (field.type) {
+                case "text":
+                    data[field.id] = document.getElementById(field.id).value;
+                    break;
+                case "password":
+                    data[field.id] = document.getElementById(field.id).value;
+                    data[field.id + "_repeat"] = document.getElementById(field.id + "_repeat").value;
+                    break;
+            }
+        });
+        return data;
     }
 }

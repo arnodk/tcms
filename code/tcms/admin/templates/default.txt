@@ -1,6 +1,8 @@
 <html>
 <head>
     <link rel="stylesheet" type="text/css" href="[baseurl]/thirdparty/bootstrap/css/bootstrap.css">
+    <script src="[baseurl]/thirdparty/jquery/jquery-3.4.1.min.js"></script>
+    <script src="[baseurl]/thirdparty/bootstrap/js/bootstrap.bundle.js"></script>
     <link rel="stylesheet" type="text/css" href="[baseurl]/thirdparty/fontawesome/css/all.min.css">
     <style>
         /* standard css */

@@ -125,6 +125,24 @@ window.logController = function(result,sAction,oParams) {
 
 window.userController = function(result,sAction,oParams) {
 
+    tcms.addButton('content','btnAddUser',function() {
+        let modal = tcms.modal();
+        modal.setTitle('Add user');
+        modal.addInput('text','name', 'userName');
+        modal.addInput('password','password','userPassw');
+        modal.addButton('primary','ok','userSave',function(evt) {
+                let data = modal.getFieldData();
+                if (data.userName === '' || data.userPassw === '') {
+                    modal.flash('error','No name or password supplied');
+                } else if (data.userPassw !== data.userPassw_repeat)  {
+                    modal.flash('error','Passwords are not the same');
+                } else {
+                    window.dashboardAddUser(data);
+                }
+        });
+        modal.render(document.getElementById('content'));
+    },'add user','primary');
+
     if (typeof result.list_data !== 'undefined') {
         let pager = tcms.pager(result.list_data,document.getElementById('content'));
         pager.row(function(item) {
@@ -141,6 +159,10 @@ window.userController = function(result,sAction,oParams) {
             window.dashboardController('user','list',{'page':iPage});
         });
     }
+
+};
+
+window.dashboardAddUser = function(data) {
 
 };
 
