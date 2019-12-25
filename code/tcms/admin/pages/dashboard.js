@@ -131,7 +131,9 @@ window.userController = function(result,sAction,oParams) {
         modal.addInput('text','name', 'userName');
         modal.addInput('password','password','userPassw');
         modal.addButton('primary','ok','userSave',function(evt) {
-                let data = modal.getFieldData();
+            modal.clearFlash();
+
+            let data = modal.getFieldData();
                 if (data.userName === '' || data.userPassw === '') {
                     modal.flash('error','No name or password supplied');
                 } else if (data.userPassw !== data.userPassw_repeat)  {

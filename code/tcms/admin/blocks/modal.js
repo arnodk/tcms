@@ -106,6 +106,8 @@ class TcmsModal {
     }
 
     flash(sType,sText) {
+        this.clearFlash();
+
         let sClass='';
         switch(sType) {
             case 'error':
@@ -113,10 +115,15 @@ class TcmsModal {
                 break;
         }
         document.getElementsByClassName('modal-footer')[0].insertAdjacentHTML('beforebegin',`
-            <div class="alert alert-`+sClass+` " role="alert">
+            <div id="flashMessage" class="alert alert-`+sClass+` " role="alert">
                 `+sText+`
             </div>
         `)
+    }
+
+    clearFlash() {
+        let el = document.getElementById("flashMessage");
+        if (el!==null) el.remove();
     }
 
     getFieldData() {
