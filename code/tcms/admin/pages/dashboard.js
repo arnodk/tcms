@@ -158,14 +158,27 @@ window.userController = function(result,sAction,oParams) {
                 sDeleteLink);
         });
         pager.renderControls(function(iPage) {
-            window.dashboardController('user','list',{'page':iPage});
+            window.dashboardController('login','list',{'page':iPage});
         });
     }
 
 };
 
 window.dashboardAddUser = function(data) {
-
+    tcms.apiCall('login','add',{
+        'user':data.userName,
+        'passw':data.userPassw,
+        'groups':''
+    },function(result) {
+        if (result.status==='OK') {
+            alert('user added');
+            let modal = tcms.modal();
+            modal.close();
+            window.dashboardController('login','list');
+        } else {
+            alert('could not add user: ' + result.reason);
+        }
+    });
 };
 
 window.dashboardController = function(sSystem,sAction, oParams) {

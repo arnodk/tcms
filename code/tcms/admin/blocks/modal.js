@@ -85,7 +85,7 @@ class TcmsModal {
                 <div class="modal-content">
                   <div class="modal-header">
                     <h5 class="modal-title">`+this.title+`</h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close" >
                       <span aria-hidden="true">&times;</span>
                     </button>
                   </div>
@@ -94,13 +94,13 @@ class TcmsModal {
                   </div>
                   <div class="modal-footer">
                      `+sButtons+`
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
                   </div>
                 </div>
               </div>
             </div>`
         );
 
+        document.querySelector(".modal .close").addEventListener("click",tcms.modal().close);
         this.setEventHandlers();
 
     }
@@ -141,5 +141,10 @@ class TcmsModal {
             }
         });
         return data;
+    }
+
+    close() {
+        $(".modal").hide();
+        document.getElementsByClassName('modal-footer')[0].remove();
     }
 }

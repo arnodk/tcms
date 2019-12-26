@@ -74,12 +74,45 @@ class Login {
         return false;
     }
 
+    public function setUser($s) {
+        $this->sUser=$s;
+    }
+
+    public function setGroupsAsString($s) {
+        $this->aGroups = explode(",",$s);
+    }
+
+    public function determineHash($s) {
+        $this->sHash = $this->getHash($s);
+    }
+
+    public function exists($s) {
+        $fs = new FileSystem($this->context);
+        $sUserJson=$fs->load('user',$s);
+        return (!empty($sUserJson));
+    }
+
+    public function save() {
+
+        $fs = new FileSystem($this->context);
+        $aData = [
+            "user"  =>$this->sUser,
+            "hash"  =>$this->sHash,
+            "groups"=>implode(",",$this->aGroups)
+        ];
+        return $fs->save("user",$this->sUser,json_encode($aData));
+    }
+
     public function pw($s) {
         if (empty($this->sHash)) return false;
 
         // todo: use dynamic salts, not a static one:
-        if (hash('sha512',$this->context->config->getStaticSalt()."||".$s) === $this->sHash) return true;
+        if ($this->getHash($s) === $this->sHash) return true;
         return false;
+    }
+
+    private function getHash($s) {
+        return hash('sha512',$this->context->config->getStaticSalt()."||".$s);
     }
 
     public function attachToSession() {
