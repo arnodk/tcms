@@ -11,12 +11,14 @@ class TcmsModal {
         this.title=sTitle;
     }
 
-    addInput(sType,sCaption,sId) {
+    addInput(sType,sCaption,sId,data) {
+        if (typeof data === 'undefined') data = {};
         let field = {};
         field.class = '';
         field.type = sType;
         field.caption = sCaption;
         field.id = sId;
+        field.value = data;
         this.fields.push(field);
     }
 
@@ -46,6 +48,20 @@ class TcmsModal {
                     sResult = sResult + `
                         <input id="`+field.id+`_repeat" class="form-control dashboard-input dashboard-input-password-repeat" type="password" placeholder="`+field.caption+` repeat" />
                     `;
+                    break;
+                case "chkboxcollection":
+                    if (Array.isArray(field.value)) {
+                        field.value.forEach(function(item) {
+                            let sChecked = (item.checked)? 'checked' : '';
+
+                            sResult = sResult + `
+                                <div class="modal-checkbox-row">
+                                    <input id="` + field.id + `_` + item.id + `" class="dashboard-input-checkbox" type="checkbox" ` + sChecked + ` />
+                                    <label for="` + field.id  + `_` + item.id + `" class="dashboard-input-checkbox-label">` + item.caption + `</label>
+                                </div>
+                            `;
+                        });
+                    }
                     break;
             }
         });
@@ -137,6 +153,17 @@ class TcmsModal {
                 case "password":
                     data[field.id] = document.getElementById(field.id).value;
                     data[field.id + "_repeat"] = document.getElementById(field.id + "_repeat").value;
+                    break;
+                case "chkboxcollection":
+                    data[field.id] = [];
+                    if (Array.isArray(field.value)) {
+                        field.value.forEach(function(item) {
+                            data[field.id].push({
+                                id:item.id,
+                                checked:document.getElementById(field.id + "_" + item.id).checked
+                            });
+                        });
+                    }
                     break;
             }
         });

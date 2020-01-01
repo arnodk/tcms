@@ -74,4 +74,15 @@ class Config {
             die();
         }
     }
+
+    public function getAllowedGroups() {
+        $result = $this->getFromSetup('general','usergroups');
+        if (empty($result))  {
+            $result = [];
+        } else {
+            $result = explode(",", $result);
+        }
+
+        return $result;
+    }
 }

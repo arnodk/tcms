@@ -39,6 +39,9 @@ class Login {
 
     public function inGroups($s) {
         $s=trim(strtolower($s));
+        // check if this group is allowed by setup usergroups
+        // if not, then return false
+        if (!in_array($s, $this->context->config->getAllowedGroups())) return  false;
         return in_array($s,$this->aGroups);
     }
 
@@ -82,6 +85,15 @@ class Login {
         $this->aGroups = explode(",",$s);
     }
 
+    public function setGroups($a) {
+        if (is_array($a)) {
+            // TODO: check if these groups are in the allowed groups config array.
+            $this->aGroups=$a;
+            return true;
+        }
+        return false;
+    }
+
     public function determineHash($s) {
         $this->sHash = $this->getHash($s);
     }
@@ -122,7 +134,7 @@ class Login {
     }
 
     public function list() {
-        // run through all the pages, and retrieve basic info about them::
+        // run through all the pages, and retrieve basic info about them:
         $fs = new FileSystem($this->context);
         $aResult = array();
         foreach($fs->list('login') as $sLogin) {
@@ -132,6 +144,23 @@ class Login {
             );
             $aResult[] = $aPage;
         }
+        return $aResult;
+    }
+
+    public function getGroupsSelection() {
+        // for all configured groups,
+        // return which this user is a member of:
+        $aResult = [];
+        $aAllowedGroups = $this->context->config->getAllowedGroups();
+
+        foreach($aAllowedGroups as $group) {
+            if ($this->inGroups($group)) {
+                $aResult[$group] = "YES";
+            } else {
+                $aResult[$group] = "NO";
+            }
+        }
+
         return $aResult;
     }
 }

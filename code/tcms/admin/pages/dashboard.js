@@ -149,19 +149,62 @@ window.userController = function(result,sAction,oParams) {
         let pager = tcms.pager(result.list_data,document.getElementById('content'));
         pager.row(function(item) {
             if (item.name !== 'root') {
-                sDeleteLink = '<a href="javascript://" onclick="dashboardLoginDelete(this)" data-name="\'+item.name+\'" class="card-link btn btn-sm btn-danger">delete</a>'
+                sDeleteLink     = '<a href="javascript://" onclick="dashboardLoginDelete(this)" data-name="'+item.name+'" class="card-link btn btn-sm btn-danger">delete</a>'
+                sChangeGroups   = '<a href="javascript://" onclick="dashboardLoginChangeGroups(this)" data-name="'+item.name+'" class="card-link btn btn-sm btn-warning">change groups</a>';
             } else {
-                sDeleteLink = '';
+                sDeleteLink     = '';
+                sChangeGroups   = '';
             }
             tcms.addCard('content',item.name, '', '','' +
                 '<a href="javascript://" onclick="dashboardLoginChangePw(this)" data-name="'+item.name+'" class="card-link btn btn-sm btn-warning">change password</a>' +
-                sDeleteLink);
+                sChangeGroups + sDeleteLink);
         });
         pager.renderControls(function(iPage) {
             window.dashboardController('login','list',{'page':iPage});
         });
     }
 
+};
+
+window.dashboardLoginChangeGroups = function(userLink) {
+    var user = userLink.dataset.name;
+    tcms.apiCall('login','get_groups',{
+        'user':user,
+    },function(result) {
+        let oGroups = result.groups;
+        let aCollection = [];
+        for(var group in oGroups) {
+            aCollection.push({
+                id:group,
+                caption:group,
+                checked:(oGroups[group]==='YES')
+            });
+        }
+        modal = tcms.modal();
+        modal.setTitle('Change groups');
+        modal.addInput('chkboxcollection', 'groups', 'userGroups', aCollection);
+        modal.addButton('primary', 'ok', 'userSave', function (evt) {
+            modal.clearFlash();
+
+            let data = modal.getFieldData().userGroups;
+            let groups = [];
+
+            data.forEach(function(item) {
+                if (item.checked) {
+                    groups.push(item.id)
+                }
+            });
+
+            tcms.apiCall('login','set_groups', {
+                'user':user,
+                'groups': groups
+            });
+
+            modal.close();
+
+        });
+        modal.render(document.getElementById('content'));
+    })
 };
 
 window.dashboardAddUser = function(data) {

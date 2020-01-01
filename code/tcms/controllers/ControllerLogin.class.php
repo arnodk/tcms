@@ -64,6 +64,18 @@ class ControllerLogin extends Controller
                     $this->output->json($this->save($aData));
                 }
                 break;
+            case "get_groups":
+                if (VerifyToken::apiTokenCheck()) {
+                    $aData = Tools::jsonPost();
+                    $this->output->json($this->getGroups($aData));
+                }
+                break;
+            case "set_groups":
+                if (VerifyToken::apiTokenCheck()) {
+                    $aData = Tools::jsonPost();
+                    $this->output->json($this->setGroups($aData));
+                }
+                break;
             default:
                 $page = new Page($this->context,Page::PAGE_ADMIN);
                 $page->load("login");
@@ -96,23 +108,25 @@ class ControllerLogin extends Controller
         return $aResult;
     }
 
-    public function add($aData) {
+    private function add($aData) {
         // return a failure, if user already exists,
         // otherwise, use save function to persist info:
         $aResult = [];
         $aResult['status'] = "FAILED";
 
-        $login = new Login($this->context);
-        if ($login->exists($aData['user'])) {
-            $aResult['reason'] = "user already exists";
-        } else {
-            $aResult=$this->save($aData);
+        if (VerifyToken::apiTokenCheck() && Login::hasGroup("admin")) {
+            $login = new Login($this->context);
+            if ($login->exists($aData['user'])) {
+                $aResult['reason'] = "user already exists";
+            } else {
+                $aResult = $this->save($aData);
+            }
         }
 
         return $aResult;
     }
 
-    public function save($aData) {
+    private function save($aData) {
         $aResult = array();
         $aResult['status'] = "FAILED";
 
@@ -127,6 +141,55 @@ class ControllerLogin extends Controller
                 $aResult['status'] = "OK";
             } else {
                 $aResult['reason'] = "could not save user";
+            }
+        }
+
+        return $aResult;
+    }
+
+    private function getGroups($aData) {
+        // warning,  this returns all the groups as keys in an associative array,
+        // with the value being YES or NO depending whether the user is a member of that group.
+        // so, do not use the result of this method as an in_array kind of check.
+        $aResult = [];
+        $aResult['status'] = "FAILED";
+
+        if (VerifyToken::apiTokenCheck() && Login::hasGroup("admin")) {
+            $login = new Login($this->context);
+            if ($login->exists($aData['user'])) {
+                if ($login->loadForUser($aData['user'])) {
+                    $aResult['groups'] = $login->getGroupsSelection();
+                    $aResult['status'] = "OK";
+                } else {
+                    $aResult['reason'] = "user info invalid";
+                }
+            } else {
+                $aResult['reason'] = "user does not exist";
+            }
+        }
+
+        return $aResult;
+    }
+
+    private function setGroups($aData) {
+        $aResult = [];
+        $aResult['status'] = "FAILED";
+
+        if (VerifyToken::apiTokenCheck() && Login::hasGroup("admin")) {
+            $login = new Login($this->context);
+            if ($login->exists($aData['user'])) {
+                if ($login->loadForUser($aData['user'])) {
+                    $login->setGroups($aData['groups']);
+                    if ($login->save()) {
+                        $aResult['status'] = "OK";
+                    } else {
+                        $aResult['reason'] = "could not save user";
+                    }
+                } else {
+                    $aResult['reason'] = "user info invalid";
+                }
+            } else {
+                $aResult['reason'] = "user does not exist";
             }
         }
 
